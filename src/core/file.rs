@@ -123,3 +123,59 @@ pub struct ReadFile {
     // This file is opened with read flag only.
     raw: RawFile,
 }
+
+impl ReadFile {
+    /// The `new` function opens file in directory (if it doesn't exist, the function return `Err`)
+    /// and creates this structures.
+    pub fn new<T: AsRef<Path>>(path: T) -> IoResult<Self> {
+        Ok(ReadFile {
+            raw: OpenOptions::new().read(true).open(path)?,
+        })
+    }
+
+    /// The `len` function returns length of the file.
+    pub fn len(&self) -> IoResult<usize> {
+        self.raw.metadata().map(|meta| meta.len() as usize)
+    }
+
+    // Read {
+
+    /// The `read_byte` returns a byte from a given index. If index is wrong anyway, the function
+    /// causes panic.
+    pub fn read_byte(&mut self, index: usize) -> IoResult<u8> {
+        let mut buf = 0_u8;
+
+        match read(&mut self.raw, index, std::array::from_mut(&mut buf))? {
+            0 => panic!("The index goes beyond the bounder!"),
+            1 => { /* Good */ }
+            _ => unreachable!(),
+        };
+
+        Ok(buf)
+    }
+
+    /// The `read_bytes` returns a slice of file's bytes starting from the first argument and
+    /// ending by the second argument. If `start` goes beyond the boundaries, the function returns
+    /// `None`.
+    pub fn read_bytes(&mut self, start: usize, end: usize) -> IoResult<Option<Box<[u8]>>> {
+        if start >= self.len()? {
+            return Ok(None);
+        }
+
+        let mut buffer = Box::from_iter((start..end.min(self.len()?)).map(|_| 0_u8));
+
+        read(&mut self.raw, start, &mut buffer[..])?;
+
+        Ok(Some(buffer))
+    }
+
+    // }
+}
+
+/// The `File` enumeration contains two variants:
+/// - New file for writing.
+/// - Opened existing file for reading.
+pub enum File {
+    New(NewFile),
+    ToRead(ReadFile),
+}
