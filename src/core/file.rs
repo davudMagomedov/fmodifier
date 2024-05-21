@@ -19,6 +19,8 @@ fn read(raw: &mut RawFile, start: usize, write_to: &mut [u8]) -> IoResult<usize>
 
 /// The `write` funtion reads bytes from third argument and writes them to file in first argument
 /// starting from index in second argument.
+///
+/// The function returns count of written bytes. If can be 0 if start is 0 or write_from is 0.
 fn write(raw: &mut RawFile, start: usize, write_from: &[u8]) -> IoResult<usize> {
     raw.seek(SeekFrom::Start(start as u64))?;
     raw.write(write_from)
@@ -68,6 +70,15 @@ impl NewFile {
         };
 
         Ok(())
+    }
+
+    /// The `write_bytes` function writes bytes from bytes in first argument starting with index in
+    /// second argument. The function returns count of written bytes.
+    ///
+    /// If second argument goes beyound the bounder, the function will return `Ok(0)` but not
+    /// error.
+    pub fn write_bytes(&mut self, bytes: &[u8], start_with: usize) -> IoResult<usize> {
+        write(&mut self.raw, start_with, bytes)
     }
 
     // }
