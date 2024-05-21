@@ -87,7 +87,7 @@ impl NewFile {
 
     /// The `read_byte` returns a byte from a given index. If index is wrong anyway, the function
     /// causes panic.
-    pub fn read_byte(&mut self, index: usize) -> IoResult<()> {
+    pub fn read_byte(&mut self, index: usize) -> IoResult<u8> {
         let mut buf = 0_u8;
 
         match read(&mut self.raw, index, std::array::from_mut(&mut buf))? {
@@ -96,7 +96,22 @@ impl NewFile {
             _ => unreachable!(),
         };
 
-        Ok(())
+        Ok(buf)
+    }
+
+    /// The `read_bytes` returns a slice of file's bytes starting from the first argument and
+    /// ending by the second argument. If `start` goes beyond the boundaries, the function returns
+    /// `None`.
+    pub fn read_bytes(&mut self, start: usize, end: usize) -> IoResult<Option<Box<[u8]>>> {
+        if start >= self.len()? {
+            return Ok(None);
+        }
+
+        let mut buffer = Box::from_iter((start..end.min(self.len()?)).map(|_| 0_u8));
+
+        read(&mut self.raw, start, &mut buffer[..])?;
+
+        Ok(Some(buffer))
     }
 
     // }
