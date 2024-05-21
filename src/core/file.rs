@@ -57,10 +57,15 @@ impl NewFile {
 
     /// The `write_byte` function writes byte in first argument into index in second argument.
     ///
-    /// If the index goes beyond the bounder, the function doesn't returns error.
+    /// If the index goes beyound the bounder, the function panics.
     pub fn write_byte(&mut self, byte: u8, index: usize) -> IoResult<()> {
         let buffer = std::array::from_ref(&byte);
-        write(&mut self.raw, index, buffer)?;
+
+        match write(&mut self.raw, index, buffer)? {
+            0 => panic!("The index goes beyond the bounder!"),
+            1 => { /* Good */ }
+            _ => unreachable!(),
+        };
 
         Ok(())
     }
