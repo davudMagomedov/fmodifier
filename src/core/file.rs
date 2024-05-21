@@ -82,6 +82,24 @@ impl NewFile {
     }
 
     // }
+
+    // Read {
+
+    /// The `read_byte` returns a byte from a given index. If index is wrong anyway, the function
+    /// causes panic.
+    pub fn read_byte(&mut self, index: usize) -> IoResult<()> {
+        let mut buf = 0_u8;
+
+        match read(&mut self.raw, index, std::array::from_mut(&mut buf))? {
+            0 => panic!("The index goes beyond the bounder!"),
+            1 => { /* Good */ }
+            _ => unreachable!(),
+        };
+
+        Ok(())
+    }
+
+    // }
 }
 
 /// The `ReadFile` structure lets to operations for reading only. This structure just openes
