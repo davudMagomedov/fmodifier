@@ -1,5 +1,59 @@
 pub const SHORT_STRING_MAX_LEN: usize = 4;
 
+/// The `Table` structure is... table.
+///
+/// There's names for rows and columns but names for columns need to be short.
+pub struct Table {
+    rows_names: Vec<String>,
+    columns_names: Vec<ShortString>,
+
+    // There's invariant: `data.len == columns_names.len * rows_names.len`.
+    //
+    // `data`: `[COLUMNS, COLUMNS, COLUMNS, ...]`
+    data: Vec<ShortString>,
+}
+
+impl Table {
+    pub fn new(rows_names: Vec<String>, columns_names: Vec<ShortString>) -> Self {
+        let columns_count = columns_names.len();
+        let rows_count = rows_names.len();
+
+        Table {
+            columns_names,
+            rows_names,
+
+            data: (0..columns_count * rows_count)
+                .map(|_| ShortString::new("".to_string()).unwrap())
+                .collect::<Vec<_>>(),
+        }
+    }
+
+    /// The `get` function returns value in appropriate cell. If there's no appropriate cell, the
+    /// function return `None`.
+    pub fn get(&self, row: usize, column: usize) -> Option<&ShortString> {
+        if column >= self.columns_names.len() {
+            return None;
+        }
+
+        self.data.get(row * self.rows_names.len() + column)
+    }
+
+    /// The `write` function writes the value to appropriate cell. If there's no appropriate cell,
+    /// the function panics.
+    pub fn write(&mut self, value: ShortString, row: usize, column: usize) {
+        if column >= self.columns_names.len() {
+            panic!("There's no appropriate cell");
+        }
+
+        let cell = self
+            .data
+            .get_mut(row * self.rows_names.len() + column)
+            .expect("There's no appropriate cell");
+
+        *cell = value
+    }
+}
+
 /// The `ShortString` just gives guarantees that inner string has size less than some setted value.
 pub struct ShortString(String);
 
@@ -29,9 +83,7 @@ pub enum OtherInfo {
     /// |__________________||__________________|
     ///          ROW                ROW
     BigTable {
-        columns: Vec<ShortString>,
-        rows: Vec<String>,
-        data: Vec<ShortString>,
+        table: Table,
     },
 }
 
