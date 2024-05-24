@@ -1,5 +1,6 @@
 use std::error::Error as ErrorTrait;
 use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::io::Error as IoError;
 
 pub type CoreResult<T> = Result<T, CoreError>;
 
@@ -19,3 +20,9 @@ impl Display for CoreError {
 }
 
 impl ErrorTrait for CoreError {}
+
+impl From<IoError> for CoreError {
+    fn from(value: IoError) -> Self {
+        unimplemented!();
+    }
+}
