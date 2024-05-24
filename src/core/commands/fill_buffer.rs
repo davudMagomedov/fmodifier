@@ -15,8 +15,8 @@ fn fill_buffer_info(buffer_name: &str, value: u8, written_bytes: usize) -> InfoL
 /// If given start index is wrong in any way, the function just will write no byte to buffer.
 ///
 /// Output's format:
-/// - Info: Bytes in the amount of {written_bytes} pieces were filled by {value} value in buffer
-/// '{buffer_name}'.
+/// - Info: Bytes in the amount of <written_bytes> pieces were filled by <value> value in buffer
+/// '<buffer_name>'.
 pub fn fill_buffer(
     core: &mut Core,
     buffer_name: String,

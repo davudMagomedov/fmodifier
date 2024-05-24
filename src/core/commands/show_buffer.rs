@@ -40,7 +40,7 @@ fn show_buffer_wrong_index(buffer_name: &str, index: usize) -> Warning {
 /// The `show_buffer` writes content of the buffer with given name to output.
 ///
 /// Output's format: if the indexes are wrong in any way:
-/// - Warning: Buffer '{buffer_name}' doesn't have index {some_wrong_index}.
+/// - Warning: Buffer '<buffer_name>' doesn't have index <some_wrong_index>.
 ///
 /// Output's format: if the indexes are correct:
 /// - Other info: Table of elements.
