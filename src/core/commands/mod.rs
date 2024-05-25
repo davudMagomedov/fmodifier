@@ -9,6 +9,7 @@ pub mod buffer_info;
 pub mod buffer_set_byte;
 pub mod create_file;
 pub mod fill_buffer;
+pub mod from_buffer_to_file;
 pub mod from_file_to_buffer;
 pub mod make_buffer;
 pub mod show_buffer;
