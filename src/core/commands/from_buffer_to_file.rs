@@ -31,21 +31,21 @@ pub fn from_buffer_to_file(
     let buffer = core
         .variables
         .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
     let bytes = Box::from(
         buffer
             .read_bytes(buffer_start, buffer_start + bytes_count)
-            .ok_or_else(|| CoreError::pass_new())?,
+            .ok_or_else(|| CoreError::incorrect_index(buffer_start, buffer.len()))?,
     );
 
     let file = core
         .variables
         .get_file_mut(&file_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(file_name.clone()))?;
 
     let written_bytes_count = match file {
         File::New(f) => f.write_bytes(&bytes, file_start),
-        File::ToRead(_) => return Err(CoreError::pass_new()),
+        File::ToRead(_) => return Err(CoreError::writing_to_read_only_file(file_name.clone())),
     }
     .map_err(|e| CoreError::from(e))?;
 

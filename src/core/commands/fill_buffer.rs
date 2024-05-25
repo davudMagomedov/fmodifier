@@ -33,7 +33,7 @@ pub fn fill_buffer(
     let buffer = core
         .variables
         .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
 
     let written_bytes = buffer.fill_bytes(value, start, end).unwrap_or(0);
 

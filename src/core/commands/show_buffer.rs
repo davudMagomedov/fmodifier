@@ -61,7 +61,7 @@ pub fn show_buffer(
     let buffer = core
         .variables
         .get_buffer(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
     let bytes = match buffer.read_bytes(start, end) {
         Some(bytes) => bytes,
         None => {

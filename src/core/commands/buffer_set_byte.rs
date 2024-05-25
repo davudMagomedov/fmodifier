@@ -27,10 +27,10 @@ pub fn buffer_set_byte(
     let buffer = core
         .variables
         .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
 
     if !correct_index_of_buffer(buffer, index) {
-        return Err(CoreError::pass_new());
+        return Err(CoreError::incorrect_index(index, buffer.len()));
     }
 
     // There's guarantees that `index` isn't wrong, so there will be no panic.

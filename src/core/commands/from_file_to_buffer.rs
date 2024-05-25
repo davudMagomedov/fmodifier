@@ -31,18 +31,23 @@ pub fn from_file_to_buffer(
     let file = core
         .variables
         .get_file_mut(&file_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(file_name.clone()))?;
+    let file_len = match file {
+        File::New(f) => f.len().map_err(|e| CoreError::from(e))?,
+        File::ToRead(f) => f.len().map_err(|e| CoreError::from(e))?,
+    };
+
     let bytes = match file {
         File::New(f) => f.read_bytes(file_start, file_start + bytes_count),
         File::ToRead(f) => f.read_bytes(file_start, file_start + bytes_count),
     }
     .map_err(|e| CoreError::from(e))?
-    .ok_or_else(|| CoreError::pass_new())?;
+    .ok_or_else(|| CoreError::incorrect_index(file_start, file_len))?; // Incorrect index
 
     let buffer = core
         .variables
         .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
 
     let written_bytes_count = buffer.write_bytes(&bytes, buffer_start);
 

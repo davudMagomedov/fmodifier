@@ -23,7 +23,7 @@ pub fn buffer_info(core: &Core, buffer_name: String) -> CoreResult<CoreOutput> {
     let buffer = core
         .variables
         .get_buffer(&buffer_name)
-        .ok_or_else(|| CoreError::pass_new())?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
 
     let mut output = CoreOutput::new();
     present_info(buffer, &buffer_name, &mut output);
