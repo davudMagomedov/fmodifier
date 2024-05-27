@@ -78,4 +78,12 @@ impl Core {
             ),
         }
     }
+
+    /// The `buffer_size` function returns size of the buffer with given name. If there's no buffer
+    /// with the name, the function returns `None`.
+    pub fn buffer_size(&self, buffer_name: &str) -> Option<usize> {
+        self.variables
+            .get_buffer(buffer_name)
+            .map(|buffer| buffer.len())
+    }
 }
