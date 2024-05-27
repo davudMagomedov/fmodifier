@@ -1,5 +1,5 @@
 /// The `CoreCommand` enumeration contains all variants of commands.
-pub enum CoreCommand {
+pub enum CoreCommand<'a> {
     // Command structure convention:
     // - There's following variants of naming:
     //     + <Action><Object>. For example: `MakeBuffer` (Action - `Make` and Object - `Buffer`).
@@ -14,21 +14,21 @@ pub enum CoreCommand {
         buffer_size: usize,
     },
     FillBuffer {
-        buffer_name: String,
+        buffer_name: &'a str,
         value: u8,
         start: usize,
         end: usize,
     },
     ShowBuffer {
-        buffer_name: String,
+        buffer_name: &'a str,
         start: usize,
         end: usize,
     },
     BufferInfo {
-        buffer_name: String,
+        buffer_name: &'a str,
     },
     BufferSetByte {
-        buffer_name: String,
+        buffer_name: &'a str,
         index: usize,
         value: u8,
     },
@@ -37,15 +37,15 @@ pub enum CoreCommand {
         file_size: usize,
     },
     FromFileToBuffer {
-        file_name: String,
-        buffer_name: String,
+        file_name: &'a str,
+        buffer_name: &'a str,
         bytes_count: usize,
         file_start: usize,
         buffer_start: usize,
     },
     FromBufferToFile {
-        buffer_name: String,
-        file_name: String,
+        buffer_name: &'a str,
+        file_name: &'a str,
         bytes_count: usize,
         buffer_start: usize,
         file_start: usize,
