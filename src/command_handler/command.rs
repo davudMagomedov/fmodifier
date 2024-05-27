@@ -1,19 +1,19 @@
 use crate::core::command::CoreCommand;
 
-pub enum Command {
-    Core(CoreCommand),
+pub enum Command<'a> {
+    Core(CoreCommand<'a>),
     BufferWriteBytes {
-        buffer_name: String,
+        buffer_name: &'a str,
         start: usize,
-        bytes: Vec<u8>,
+        bytes: &'a [u8],
     },
     PullOutSlice {
-        buffer_name: String,
-        new_buffer_name: String,
+        buffer_name: &'a str,
+        new_buffer_name: &'a str,
     },
     MergeBuffers {
-        left_buffer_name: String,
-        right_buffer_name: String,
-        new_buffer_name: String,
+        left_buffer_name: &'a str,
+        right_buffer_name: &'a str,
+        new_buffer_name: &'a str,
     },
 }
