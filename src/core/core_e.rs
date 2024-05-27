@@ -18,12 +18,6 @@ pub struct CoreError {
 }
 
 impl CoreError {
-    pub fn pass_new() -> Self {
-        unimplemented!()
-    }
-}
-
-impl CoreError {
     pub fn undefined_variable(variable_name: String) -> Self {
         CoreError {
             enumer: CoreErrorEnum::UndefinedVariable { variable_name },
