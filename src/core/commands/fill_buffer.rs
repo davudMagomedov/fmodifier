@@ -19,7 +19,7 @@ fn fill_buffer_info(buffer_name: &str, value: u8, written_bytes: usize) -> InfoL
 /// '<buffer_name>'.
 pub fn fill_buffer(
     core: &mut Core,
-    buffer_name: String,
+    buffer_name: &str,
     value: u8,
     start: usize,
     end: usize,
@@ -32,13 +32,13 @@ pub fn fill_buffer(
 
     let buffer = core
         .variables
-        .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
+        .get_buffer_mut(buffer_name)
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.to_string()))?;
 
     let written_bytes = buffer.fill_bytes(value, start, end).unwrap_or(0);
 
     let mut output = CoreOutput::new();
-    output.push_info(fill_buffer_info(&buffer_name, value, written_bytes));
+    output.push_info(fill_buffer_info(buffer_name, value, written_bytes));
 
     Ok(output)
 }

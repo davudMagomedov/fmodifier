@@ -22,16 +22,16 @@ fn from_buffer_to_file_info(
 /// file <file_name>.
 pub fn from_buffer_to_file(
     core: &mut Core,
-    buffer_name: String,
-    file_name: String,
+    buffer_name: &str,
+    file_name: &str,
     bytes_count: usize,
     buffer_start: usize,
     file_start: usize,
 ) -> CoreResult<CoreOutput> {
     let buffer = core
         .variables
-        .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
+        .get_buffer_mut(buffer_name)
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.to_string()))?;
     let bytes = Box::from(
         buffer
             .read_bytes(buffer_start, buffer_start + bytes_count)
@@ -40,19 +40,19 @@ pub fn from_buffer_to_file(
 
     let file = core
         .variables
-        .get_file_mut(&file_name)
-        .ok_or_else(|| CoreError::undefined_variable(file_name.clone()))?;
+        .get_file_mut(file_name)
+        .ok_or_else(|| CoreError::undefined_variable(file_name.to_string()))?;
 
     let written_bytes_count = match file {
         File::New(f) => f.write_bytes(&bytes, file_start),
-        File::ToRead(_) => return Err(CoreError::writing_to_read_only_file(file_name.clone())),
+        File::ToRead(_) => return Err(CoreError::writing_to_read_only_file(file_name.to_string())),
     }
     .map_err(|e| CoreError::from(e))?;
 
     let mut output = CoreOutput::new();
     output.push_info(from_buffer_to_file_info(
-        &buffer_name,
-        &file_name,
+        buffer_name,
+        file_name,
         written_bytes_count,
     ));
 

@@ -46,7 +46,7 @@ fn show_buffer_wrong_index(buffer_name: &str, index: usize) -> Warning {
 /// - Other info: Table of elements.
 pub fn show_buffer(
     core: &Core,
-    buffer_name: String,
+    buffer_name: &str,
     start: usize,
     end: usize,
 ) -> CoreResult<CoreOutput> {
@@ -60,13 +60,13 @@ pub fn show_buffer(
 
     let buffer = core
         .variables
-        .get_buffer(&buffer_name)
-        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
+        .get_buffer(buffer_name)
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.to_string()))?;
     let bytes = match buffer.read_bytes(start, end) {
         Some(bytes) => bytes,
         None => {
             let mut output = CoreOutput::new();
-            output.push_warning(show_buffer_wrong_index(&buffer_name, start));
+            output.push_warning(show_buffer_wrong_index(buffer_name, start));
 
             return Ok(output);
         }

@@ -32,13 +32,13 @@ impl Core {
                 value,
                 start,
                 end,
-            } => fill_buffer(self, buffer_name, value, start, end),
+            } => fill_buffer(self, &buffer_name, value, start, end),
             CoreCommand::ShowBuffer {
                 buffer_name,
                 start,
                 end,
-            } => show_buffer(self, buffer_name, start, end),
-            CoreCommand::BufferInfo { buffer_name } => buffer_info(self, buffer_name),
+            } => show_buffer(self, &buffer_name, start, end),
+            CoreCommand::BufferInfo { buffer_name } => buffer_info(self, &buffer_name),
             CoreCommand::CreateFile {
                 file_name,
                 file_size,
@@ -47,7 +47,7 @@ impl Core {
                 buffer_name,
                 index,
                 value,
-            } => buffer_set_byte(self, buffer_name, index, value),
+            } => buffer_set_byte(self, &buffer_name, index, value),
             CoreCommand::FromFileToBuffer {
                 file_name,
                 buffer_name,
@@ -56,8 +56,8 @@ impl Core {
                 buffer_start,
             } => from_file_to_buffer(
                 self,
-                file_name,
-                buffer_name,
+                &file_name,
+                &buffer_name,
                 bytes_count,
                 file_start,
                 buffer_start,
@@ -70,8 +70,8 @@ impl Core {
                 file_start,
             } => from_buffer_to_file(
                 self,
-                buffer_name,
-                file_name,
+                &buffer_name,
+                &file_name,
                 bytes_count,
                 buffer_start,
                 file_start,

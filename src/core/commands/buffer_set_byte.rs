@@ -20,14 +20,14 @@ fn buffer_set_byte_info(buffer_name: &str, index: usize, value: u8) -> String {
 /// - Info: Index <index> in buffer with name <name> was set to <value>.
 pub fn buffer_set_byte(
     core: &mut Core,
-    buffer_name: String,
+    buffer_name: &str,
     index: usize,
     value: u8,
 ) -> CoreResult<CoreOutput> {
     let buffer = core
         .variables
         .get_buffer_mut(&buffer_name)
-        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.to_string()))?;
 
     if !correct_index_of_buffer(buffer, index) {
         return Err(CoreError::incorrect_index(index, buffer.len()));
@@ -37,7 +37,7 @@ pub fn buffer_set_byte(
     buffer.write_byte(value, index);
 
     let mut output = CoreOutput::new();
-    output.push_info(buffer_set_byte_info(&buffer_name, index, value));
+    output.push_info(buffer_set_byte_info(buffer_name, index, value));
 
     Ok(output)
 }

@@ -19,14 +19,14 @@ fn present_info(buffer: &Buffer, buffer_name: &str, output: &mut CoreOutput) {
 /// Output's format:
 /// - Name: <buffer_name>.
 /// - Size: <buffer_size>
-pub fn buffer_info(core: &Core, buffer_name: String) -> CoreResult<CoreOutput> {
+pub fn buffer_info(core: &Core, buffer_name: &str) -> CoreResult<CoreOutput> {
     let buffer = core
         .variables
-        .get_buffer(&buffer_name)
-        .ok_or_else(|| CoreError::undefined_variable(buffer_name.clone()))?;
+        .get_buffer(buffer_name)
+        .ok_or_else(|| CoreError::undefined_variable(buffer_name.to_string()))?;
 
     let mut output = CoreOutput::new();
-    present_info(buffer, &buffer_name, &mut output);
+    present_info(buffer, buffer_name, &mut output);
 
     Ok(output)
 }
