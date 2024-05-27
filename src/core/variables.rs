@@ -31,28 +31,28 @@ impl Variables {
         }
     }
 
-    pub fn get_buffer(&self, buffer_name: &String) -> Option<&Buffer> {
+    pub fn get_buffer(&self, buffer_name: &str) -> Option<&Buffer> {
         self.vars.get(buffer_name).map(|var| match var {
             VariableValue::File(_) => None,
             VariableValue::Buffer(b) => Some(b),
         })?
     }
 
-    pub fn get_buffer_mut(&mut self, buffer_name: &String) -> Option<&mut Buffer> {
+    pub fn get_buffer_mut(&mut self, buffer_name: &str) -> Option<&mut Buffer> {
         self.vars.get_mut(buffer_name).map(|var| match var {
             VariableValue::File(_) => None,
             VariableValue::Buffer(b) => Some(b),
         })?
     }
 
-    pub fn get_file(&self, file_name: &String) -> Option<&File> {
+    pub fn get_file(&self, file_name: &str) -> Option<&File> {
         self.vars.get(file_name).map(|var| match var {
             VariableValue::File(f) => Some(f),
             VariableValue::Buffer(_) => None,
         })?
     }
 
-    pub fn get_file_mut(&mut self, file_name: &String) -> Option<&mut File> {
+    pub fn get_file_mut(&mut self, file_name: &str) -> Option<&mut File> {
         self.vars.get_mut(file_name).map(|var| match var {
             VariableValue::File(f) => Some(f),
             VariableValue::Buffer(_) => None,
