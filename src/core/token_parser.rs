@@ -7,17 +7,19 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 pub type ParseResult<T> = Result<T, ParseError>;
 
 #[derive(Debug)]
-pub struct ParseError {}
+pub enum ParseError {
+    UnknownCommandTemplate,
+}
 
 impl ParseError {
-    pub fn pass_new() -> Self {
-        ParseError {}
+    pub fn unknown_command_template() -> Self {
+        ParseError::UnknownCommandTemplate
     }
 }
 
 impl Display for ParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "ParseError: ")
+        write!(f, "ParseError: {:?}", self)
     }
 }
 
@@ -25,12 +27,12 @@ impl ErrorTrait for ParseError {}
 
 /// The `parse_tokens` function takes sequence of tokens and makes on them core's command.
 pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
-    let Some(Token::Word(command_name)) = tokens.get(0) else { return Err(ParseError::pass_new()) };
+    let Some(Token::Word(command_name)) = tokens.get(0) else { return Err(ParseError::unknown_command_template()) };
 
     match command_name.as_str() {
         "make_buffer" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(buffer_size)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(buffer_size)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::MakeBuffer {
                 buffer_name: buffer_name.clone(),
@@ -38,13 +40,13 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "fill_buffer" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(value)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(start)) = tokens.get(3) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(end)) = tokens.get(4) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(value)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(start)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(end)) = tokens.get(4) else { return Err(ParseError::unknown_command_template()) };
 
             if *value > 255 {
-                return Err(ParseError::pass_new());
+                return Err(ParseError::unknown_command_template());
             }
 
             Ok(CoreCommand::FillBuffer {
@@ -55,9 +57,9 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "show_buffer" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(start)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(end)) = tokens.get(3) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(start)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(end)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::ShowBuffer {
                 buffer_name,
@@ -66,17 +68,17 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "buffer_info" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::BufferInfo { buffer_name })
         }
         "buffer_set_byte" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(index)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(value)) = tokens.get(3) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(index)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(value)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
 
             if *value > 255 {
-                return Err(ParseError::pass_new());
+                return Err(ParseError::unknown_command_template());
             }
 
             Ok(CoreCommand::BufferSetByte {
@@ -86,8 +88,8 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "create_file" => {
-            let Some(Token::Word(file_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(file_size)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(file_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(file_size)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::CreateFile {
                 file_name: file_name.clone(),
@@ -95,11 +97,11 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "from_file_to_buffer" => {
-            let Some(Token::Word(file_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::Word(buffer_name)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(bytes_count)) = tokens.get(3) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(file_start)) = tokens.get(4) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(buffer_start)) = tokens.get(5) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(file_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(bytes_count)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(file_start)) = tokens.get(4) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(buffer_start)) = tokens.get(5) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::FromFileToBuffer {
                 file_name,
@@ -110,11 +112,11 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             })
         }
         "from_buffer_to_file" => {
-            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::pass_new()) };
-            let Some(Token::Word(file_name)) = tokens.get(2) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(bytes_count)) = tokens.get(3) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(buffer_start)) = tokens.get(4) else { return Err(ParseError::pass_new()) };
-            let Some(Token::UInt(file_start)) = tokens.get(5) else { return Err(ParseError::pass_new()) };
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::Word(file_name)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(bytes_count)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(buffer_start)) = tokens.get(4) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(file_start)) = tokens.get(5) else { return Err(ParseError::unknown_command_template()) };
 
             Ok(CoreCommand::FromBufferToFile {
                 buffer_name,
@@ -124,6 +126,6 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 file_start: *file_start,
             })
         }
-        _ => Err(ParseError::pass_new()),
+        _ => Err(ParseError::unknown_command_template()),
     }
 }
