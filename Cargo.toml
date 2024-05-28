@@ -1,1 +1,1 @@
-workspace = { members = ["core", "fmodifier"] }
+workspace = { members = ["core", "fmodifier", "terminal"] }

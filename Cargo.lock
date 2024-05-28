@@ -9,3 +9,7 @@ version = "0.1.0"
 [[package]]
 name = "fmodifier"
 version = "0.1.0"
+
+[[package]]
+name = "terminal"
+version = "0.1.0"
