@@ -59,7 +59,7 @@ impl CoreError {
 
 impl Display for CoreError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "TODO ERROR HANDLING")
+        write!(f, "CoreError: {}", self.enumer)
     }
 }
 
