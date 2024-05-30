@@ -17,7 +17,13 @@ pub mod error {
 
     impl<'a> Display for TokenizeError<'a> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "TokenizeError")
+            write!(f, "TokenizeError: ")?;
+
+            match self {
+                TokenizeError::CouldNotTokenizeWord { word } => {
+                    write!(f, "{}", word)
+                }
+            }
         }
     }
 
