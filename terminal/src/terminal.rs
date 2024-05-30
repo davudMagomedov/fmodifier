@@ -67,6 +67,7 @@ impl Terminal {
     /// The `_write` function returns result of writing string to terminal.
     fn _write(&mut self, string: &str) -> IoResult<()> {
         self.out_stream.write(string.as_bytes())?;
+        self.out_stream.write(&[b'\n'])?;
         self.out_stream.flush()?;
 
         Ok(())
