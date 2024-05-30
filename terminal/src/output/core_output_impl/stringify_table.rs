@@ -19,6 +19,17 @@ impl StringRectangle {
         }
     }
 
+    /// The `fill` function creates string rectangle with given shape and fills it by the given
+    /// value.
+    pub fn fill(width: usize, height: usize, fill_by: char) -> StringRectangle {
+        let line = String::from_utf8(vec![fill_by as u8; width]).expect("UTF-8 error");
+        let lines = (0..height)
+            .map(|_| line.clone())
+            .collect::<VecDeque<String>>();
+
+        StringRectangle { lines }
+    }
+
     /// The `push_bottom` function inserts the given line to bottom of string rectangle saving
     /// proportion.
     ///
