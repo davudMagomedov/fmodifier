@@ -10,6 +10,26 @@ enum CoreErrorEnum {
     Io { e: IoError },
 }
 
+impl Display for CoreErrorEnum {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            CoreErrorEnum::UndefinedVariable { variable_name } => {
+                write!(f, "UndefinedVariable: {}", variable_name)
+            }
+            CoreErrorEnum::IncorrectIndex { index, top } => {
+                write!(f, "IncorrectIndex: {} whereas the top is {}", index, top)
+            }
+            CoreErrorEnum::WritingToReadOnlyFile { file_name } => {
+                write!(f, "WritingToReadOnlyFile: {}", file_name)
+            }
+            CoreErrorEnum::Io { e } => {
+                write!(f, "{}", e)
+            }
+            _ => panic!(),
+        }
+    }
+}
+
 pub type CoreResult<T> = Result<T, CoreError>;
 
 #[derive(Debug)]
