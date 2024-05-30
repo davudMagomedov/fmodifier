@@ -4,23 +4,23 @@ pub const SHORT_STRING_MAX_LEN: usize = 4;
 ///
 /// There's names for rows and columns but names for columns need to be short.
 pub struct Table {
-    rows_names: Vec<String>,
-    columns_names: Vec<ShortString>,
+    row_names: Vec<String>,
+    column_names: Vec<ShortString>,
 
-    // There's invariant: `data.len == columns_names.len * rows_names.len`.
+    // There's invariant: `data.len == column_names.len * row_names.len`.
     //
     // `data`: `[COLUMNS, COLUMNS, COLUMNS, ...]`
     data: Vec<ShortString>,
 }
 
 impl Table {
-    pub fn new(rows_names: Vec<String>, columns_names: Vec<ShortString>) -> Self {
-        let columns_count = columns_names.len();
-        let rows_count = rows_names.len();
+    pub fn new(row_names: Vec<String>, column_names: Vec<ShortString>) -> Self {
+        let columns_count = column_names.len();
+        let rows_count = row_names.len();
 
         Table {
-            columns_names,
-            rows_names,
+            column_names,
+            row_names,
 
             data: (0..columns_count * rows_count)
                 .map(|_| ShortString::new("".to_string()).unwrap())
@@ -28,26 +28,36 @@ impl Table {
         }
     }
 
+    /// The `row_names` function returns slice of names for each row.
+    pub fn row_names(&self) -> &[String] {
+        &self.row_names
+    }
+
+    /// The `column_names` function returns slice of names for each column.
+    pub fn column_names(&self) -> &[ShortString] {
+        &self.column_names
+    }
+
     /// The `get` function returns value in appropriate cell. If there's no appropriate cell, the
     /// function return `None`.
     pub fn get(&self, row: usize, column: usize) -> Option<&ShortString> {
-        if column >= self.columns_names.len() {
+        if column >= self.column_names.len() {
             return None;
         }
 
-        self.data.get(row * self.rows_names.len() + column)
+        self.data.get(row * self.row_names.len() + column)
     }
 
     /// The `write` function writes the value to appropriate cell. If there's no appropriate cell,
     /// the function panics.
     pub fn write(&mut self, value: ShortString, row: usize, column: usize) {
-        if column >= self.columns_names.len() {
+        if column >= self.column_names.len() {
             panic!("There's no appropriate cell");
         }
 
         let cell = self
             .data
-            .get_mut(row * self.rows_names.len() + column)
+            .get_mut(row * self.row_names.len() + column)
             .expect("There's no appropriate cell");
 
         *cell = value
