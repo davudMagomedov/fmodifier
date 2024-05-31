@@ -1,6 +1,6 @@
 use core::output::*;
 
-use std::{collections::VecDeque, ptr::copy_nonoverlapping};
+use std::collections::VecDeque;
 
 const ANY_INDEX: usize = 0;
 const ANY_USIZE_VALUE: usize = 0;
@@ -237,4 +237,11 @@ impl ToString for Matrix {
 
         rectangle.to_string()
     }
+}
+
+/// The `stringify_table` function parses table to string. In the end and in the start there's no
+/// extra characters (spaces, new line and so on).
+pub fn stringify_table(table: Table) -> String {
+    let matrix = Matrix::from(table);
+    matrix.to_string()
 }
