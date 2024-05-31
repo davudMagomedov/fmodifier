@@ -98,20 +98,20 @@ impl ToOutput for CoreOutput {
 
         let infos = self.info();
         if !infos.is_empty() {
-            let inf = stringify_infos(self.info(), &mut output);
-            output.push_str("\n\n");
+            stringify_infos(self.info(), &mut output);
+            output.push_str("\n");
         }
 
         let other_infos = self.other_info();
         if !other_infos.is_empty() {
             stringify_other_infos(other_infos, &mut output);
-            output.push_str("\n\n");
+            output.push_str("\n");
         }
 
         let warnings = self.warnings();
         if !warnings.is_empty() {
             stringify_warnings(self.warnings(), &mut output);
-            output.push_str("\n\n");
+            output.push_str("\n");
         }
 
         output
