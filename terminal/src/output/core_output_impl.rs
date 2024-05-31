@@ -8,6 +8,9 @@ mod stringify_table_2_col;
 use stringify_table::stringify_table;
 use stringify_table_2_col::stringify_table_2_col;
 
+const TABLE_CAPTION: &str = "Table:";
+const TABLE_2COL_CAPTION: &str = "Table:";
+
 fn stringify_info_line(info_line: &InfoLine, write_to: &mut String) {
     write_to.push_str("- ");
     write_to.push_str(info_line);
@@ -34,9 +37,11 @@ fn stringify_infos(infos: &[InfoLine], write_to: &mut String) {
 fn stringify_other_info(other_info: &OtherInfo, write_to: &mut String) {
     match other_info {
         OtherInfo::Table2Column { data } => {
+            write_to.push_str(TABLE_CAPTION);
             stringify_table_2_col(data, write_to);
         }
         OtherInfo::BigTable { table } => {
+            write_to.push_str(TABLE_2COL_CAPTION);
             stringify_table(table, write_to);
         }
     }
@@ -57,4 +62,28 @@ fn stringify_other_infos(other_infos: &[OtherInfo], write_to: &mut String) {
         });
 
     stringify_other_info(&other_infos[other_infos.len() - 1], write_to);
+}
+
+fn stringify_warning(warning: &Warning, write_to: &mut String) {
+    debug_assert!(!warning.contains('\n'));
+
+    write_to.push_str("Warning: ");
+    write_to.push_str(warning);
+}
+
+/// The `stringify_warning` function writes to given string all all warnings. There's no extra
+/// characters in the end and in the start.
+fn stringify_warnings(warnings: &[Warning], write_to: &mut String) {
+    if warnings.is_empty() {
+        return;
+    }
+
+    warnings[..warnings.len() - 1]
+        .into_iter()
+        .for_each(|other_info| {
+            stringify_warning(other_info, write_to);
+            write_to.push('\n');
+        });
+
+    stringify_warning(&warnings[warnings.len() - 1], write_to);
 }
