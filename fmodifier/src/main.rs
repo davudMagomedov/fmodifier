@@ -1,3 +1,5 @@
+use terminal::runner::Runner;
+
 fn main() {
-    println!("Hello, world!");
+    for _ in Runner::new() {}
 }
