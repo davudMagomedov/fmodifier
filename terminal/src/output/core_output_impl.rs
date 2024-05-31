@@ -38,10 +38,14 @@ fn stringify_other_info(other_info: &OtherInfo, write_to: &mut String) {
     match other_info {
         OtherInfo::Table2Column { data } => {
             write_to.push_str(TABLE_CAPTION);
+            write_to.push('\n');
+
             stringify_table_2_col(data, write_to);
         }
         OtherInfo::BigTable { table } => {
             write_to.push_str(TABLE_2COL_CAPTION);
+            write_to.push('\n');
+
             stringify_table(table, write_to);
         }
     }
