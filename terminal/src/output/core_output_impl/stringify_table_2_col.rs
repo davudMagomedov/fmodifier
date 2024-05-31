@@ -17,6 +17,10 @@ pub fn stringify_table_2_col(table: &[(String, String)]) -> String {
         .into_iter()
         .all(|(k, v)| !k.contains('\n') && !v.contains('\n')));
 
+    if table.is_empty() {
+        return "".to_string();
+    }
+
     let mut string_table = "".to_string();
 
     let string_couples = stringify_couples(table);
