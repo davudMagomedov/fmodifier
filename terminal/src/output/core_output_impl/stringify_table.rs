@@ -1,6 +1,6 @@
 use core::output::*;
 
-use std::collections::VecDeque;
+use std::{collections::VecDeque, ptr::copy_nonoverlapping};
 
 const ANY_INDEX: usize = 0;
 const ANY_USIZE_VALUE: usize = 0;
@@ -145,6 +145,58 @@ impl StringRectangle {
             for line in &mut self.lines {
                 line.push_str(&missing_spaces);
             }
+        }
+    }
+}
+
+struct Matrix {
+    // INVARIANT: `data.len() % row_count == 0`, because `data.len() % row_count` is column count.
+
+    // data: [...COLUMNS, ...COLUMNS, ...COLUMNS, ...]
+    data: Vec<String>,
+    row_count: usize,
+}
+
+impl Matrix {
+    pub fn get(&self, row: usize, column: usize) -> Option<&String> {
+        let column_count = self.data.len() / self.row_count;
+        self.data.get(row * column_count + column)
+    }
+}
+
+/// The `from<Table>` copies all data in fields to new matrix, columns names and row names. For
+/// example, if you had table 3x4 (3 rows and 4 columns), you'll get matrix 4x5: column names and
+/// row names are added to data.
+impl From<Table> for Matrix {
+    fn from(value: Table) -> Self {
+        let column_names = value.column_names();
+        let row_names = value.row_names();
+
+        let mut matrix_data: Vec<String> = Vec::new();
+
+        matrix_data.extend(
+            column_names
+                .into_iter()
+                .map(|short_string| short_string.get().to_string()),
+        );
+
+        let table_column_count = column_names.len();
+        let table_row_count = row_names.len();
+
+        (0..table_row_count).for_each(|row_index| {
+            matrix_data.push(row_names[row_index].clone());
+            matrix_data.extend((0..table_column_count).map(|column_index| {
+                value
+                    .get(row_index, column_index)
+                    .unwrap() // `row_index` and `column_index` are right in any way.
+                    .get()
+                    .to_string()
+            }));
+        });
+
+        Matrix {
+            data: matrix_data,
+            row_count: table_row_count + 1,
         }
     }
 }
