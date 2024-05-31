@@ -87,3 +87,19 @@ fn stringify_warnings(warnings: &[Warning], write_to: &mut String) {
 
     stringify_warning(&warnings[warnings.len() - 1], write_to);
 }
+
+impl ToOutput for CoreOutput {
+    fn to_output(self) -> String {
+        let mut output = String::new();
+
+        stringify_infos(self.info(), &mut output);
+        output.push_str("\n\n");
+
+        stringify_other_infos(self.other_info(), &mut output);
+        output.push_str("\n\n");
+
+        stringify_warnings(self.warnings(), &mut output);
+
+        output
+    }
+}
