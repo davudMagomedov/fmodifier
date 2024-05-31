@@ -16,7 +16,7 @@ struct StringRectangle {
 }
 
 impl StringRectangle {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         StringRectangle {
             lines: VecDeque::new(),
         }
@@ -149,6 +149,18 @@ impl StringRectangle {
     }
 }
 
+impl ToString for StringRectangle {
+    fn to_string(&self) -> String {
+        let mut string_rect = "".to_string();
+
+        self.lines
+            .iter()
+            .for_each(|line| string_rect.push_str(line));
+
+        string_rect
+    }
+}
+
 struct Matrix {
     // INVARIANT: `data.len() % row_count == 0`, because `data.len() % row_count` is column count.
 
@@ -198,5 +210,31 @@ impl From<Table> for Matrix {
             data: matrix_data,
             row_count: table_row_count + 1,
         }
+    }
+}
+
+impl ToString for Matrix {
+    fn to_string(&self) -> String {
+        let column_count = self.data.len() / self.row_count;
+
+        let maybe_rectangle = (0..column_count)
+            .map(|column_index| {
+                let lines = &(0..self.row_count)
+                    .map(|row_index| self.get(row_index, column_index).unwrap().as_str())
+                    .collect::<Vec<&str>>();
+
+                StringRectangle::new_with_lines(lines)
+            })
+            .reduce(|acc, str_rect| {
+                let tab = StringRectangle::new_with_lines(&vec![" "; self.row_count]);
+                acc.place_right(tab).place_right(str_rect)
+            });
+
+        let rectangle = match maybe_rectangle {
+            Some(rect) => rect,
+            None => return "".to_string(),
+        };
+
+        rectangle.to_string()
     }
 }
