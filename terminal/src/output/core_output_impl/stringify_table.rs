@@ -3,6 +3,9 @@ use core::output::*;
 use std::collections::VecDeque;
 
 const ANY_INDEX: usize = 0;
+const ANY_USIZE_VALUE: usize = 0;
+
+const UTF_8_ERROR: &str = "UTF-8 error";
 
 struct StringRectangle {
     // INVARIANT:
@@ -19,10 +22,37 @@ impl StringRectangle {
         }
     }
 
+    /// The `new_with_lines` function returns string rectangle by the given lines.
+    ///
+    /// Any line in given list of lines must not have `\n` character.
+    pub fn new_with_lines(lines: &[&str]) -> Self {
+        debug_assert!(lines.into_iter().all(|line| !line.contains('\n')));
+
+        let mut lines: VecDeque<String> =
+            lines.into_iter().map(|string| string.to_string()).collect();
+
+        let max_len = lines
+            .iter()
+            .max_by_key(|string| string.len())
+            .map(|string| string.len())
+            .unwrap_or(ANY_USIZE_VALUE);
+
+        lines.iter_mut().for_each(|string| {
+            let missing_spaces =
+                String::from_utf8(vec![b' '; max_len - string.len()]).expect(UTF_8_ERROR);
+            string.push_str(&missing_spaces);
+        });
+
+        StringRectangle { lines }
+    }
+
     /// The `fill` function creates string rectangle with given shape and fills it by the given
     /// value.
     pub fn fill(width: usize, height: usize, fill_by: char) -> StringRectangle {
-        let line = String::from_utf8(vec![fill_by as u8; width]).expect("UTF-8 error");
+        debug_assert!(fill_by.is_ascii());
+        debug_assert_ne!(fill_by, '\n');
+
+        let line = String::from_utf8(vec![fill_by as u8; width]).expect(UTF_8_ERROR);
         let lines = (0..height)
             .map(|_| line.clone())
             .collect::<VecDeque<String>>();
