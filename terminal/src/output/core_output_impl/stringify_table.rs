@@ -179,8 +179,8 @@ impl Matrix {
 /// The `from<Table>` copies all data in fields to new matrix, columns names and row names. For
 /// example, if you had table 3x4 (3 rows and 4 columns), you'll get matrix 4x5: column names and
 /// row names are added to data.
-impl From<Table> for Matrix {
-    fn from(value: Table) -> Self {
+impl From<&Table> for Matrix {
+    fn from(value: &Table) -> Self {
         let column_names = value.column_names();
         let row_names = value.row_names();
 
@@ -241,7 +241,7 @@ impl ToString for Matrix {
 
 /// The `stringify_table` function parses table to string. In the end and in the start there's no
 /// extra characters (spaces, new line and so on).
-pub fn stringify_table(table: Table) -> String {
+pub fn stringify_table(table: &Table) -> String {
     let matrix = Matrix::from(table);
     matrix.to_string()
 }
