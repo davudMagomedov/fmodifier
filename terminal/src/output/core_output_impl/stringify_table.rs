@@ -239,9 +239,9 @@ impl ToString for Matrix {
     }
 }
 
-/// The `stringify_table` function parses table to string. In the end and in the start there's no
-/// extra characters (spaces, new line and so on).
-pub fn stringify_table(table: &Table) -> String {
+/// The `stringify_table` function writes to given string stringified given table. There's no extra
+/// characters in the end and in the start.
+pub fn stringify_table(table: &Table, write_to: &mut String) {
     let matrix = Matrix::from(table);
-    matrix.to_string()
+    write_to.push_str(&matrix.to_string());
 }
