@@ -96,13 +96,23 @@ impl ToOutput for CoreOutput {
     fn to_output(self) -> String {
         let mut output = String::new();
 
-        stringify_infos(self.info(), &mut output);
-        output.push_str("\n\n");
+        let infos = self.info();
+        if !infos.is_empty() {
+            let inf = stringify_infos(self.info(), &mut output);
+            output.push_str("\n\n");
+        }
 
-        stringify_other_infos(self.other_info(), &mut output);
-        output.push_str("\n\n");
+        let other_infos = self.other_info();
+        if !other_infos.is_empty() {
+            stringify_other_infos(other_infos, &mut output);
+            output.push_str("\n\n");
+        }
 
-        stringify_warnings(self.warnings(), &mut output);
+        let warnings = self.warnings();
+        if !warnings.is_empty() {
+            stringify_warnings(self.warnings(), &mut output);
+            output.push_str("\n\n");
+        }
 
         output
     }
