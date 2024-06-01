@@ -16,11 +16,12 @@ fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
 
     let mut table = Table::new(row_names, column_names);
 
+    let offset = start % COLUMNS_COUNT;
     for (byte_index, &byte) in bytes.into_iter().enumerate() {
         table.write(
             ShortString::new(byte.to_string()).expect(SHORT_STRING_ERROR),
-            (start + byte_index) / COLUMNS_COUNT,
-            (start + byte_index) % COLUMNS_COUNT,
+            (offset + byte_index) / COLUMNS_COUNT,
+            (offset + byte_index) % COLUMNS_COUNT,
         )
     }
 
