@@ -1,5 +1,8 @@
 use terminal::runner::Runner;
 
 fn main() {
-    for _ in Runner::new() {}
+    let mut runner = Runner::new();
+    loop {
+        runner.next();
+    }
 }
