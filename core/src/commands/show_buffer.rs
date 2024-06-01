@@ -14,12 +14,6 @@ fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
         .map(|row_index| (row_index * COLUMNS_COUNT).to_string())
         .collect();
 
-    println!(
-        "{:?}\t{:?}",
-        column_names.iter().map(|t| t.get()).collect::<Vec<_>>(),
-        row_names
-    );
-
     let mut table = Table::new(row_names, column_names);
 
     for (byte_index, &byte) in bytes.into_iter().enumerate() {
