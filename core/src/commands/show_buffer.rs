@@ -2,29 +2,33 @@ use super::*;
 
 const COLUMNS_COUNT: usize = 8;
 
+const SHORT_STRING_ERROR: &str = "The string can't be parsed into the short string.";
+
 /// The `make_table` creates table with appropriate names for columns and rows. It's take two
 /// arguments: bytes and index those bytes start with.
 fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
-    let start_index = start % COLUMNS_COUNT;
-    let rows_count = ((start_index + bytes.len() - 1) / COLUMNS_COUNT) * COLUMNS_COUNT;
-    let row_start_in = (start / COLUMNS_COUNT) * COLUMNS_COUNT;
+    let column_names: Vec<ShortString> = (0..COLUMNS_COUNT)
+        .map(|c| ShortString::new(c.to_string()).unwrap())
+        .collect();
+    let row_names = (start / COLUMNS_COUNT..(start + bytes.len()) / COLUMNS_COUNT + 1)
+        .map(|row_index| (row_index * COLUMNS_COUNT).to_string())
+        .collect();
 
-    let rows_names = (row_start_in..row_start_in + rows_count)
-        .map(|i| ((i * COLUMNS_COUNT).to_string()))
-        .collect::<Vec<_>>();
-    let columns_names = (0..COLUMNS_COUNT)
-        .map(|i| ShortString::new(i.to_string()).unwrap())
-        .collect::<Vec<_>>();
+    println!(
+        "{:?}\t{:?}",
+        column_names.iter().map(|t| t.get()).collect::<Vec<_>>(),
+        row_names
+    );
 
-    let mut table = Table::new(rows_names, columns_names);
+    let mut table = Table::new(row_names, column_names);
 
-    (start_index..start_index + bytes.len()).for_each(|index| {
+    for (byte_index, &byte) in bytes.into_iter().enumerate() {
         table.write(
-            ShortString::new(bytes[index].to_string()).unwrap(),
-            index / COLUMNS_COUNT,
-            index % COLUMNS_COUNT,
+            ShortString::new(byte.to_string()).expect(SHORT_STRING_ERROR),
+            (start + byte_index) / COLUMNS_COUNT,
+            (start + byte_index) % COLUMNS_COUNT,
         )
-    });
+    }
 
     OtherInfo::BigTable { table }
 }
