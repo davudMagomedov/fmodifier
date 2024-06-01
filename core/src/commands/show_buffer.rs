@@ -1,6 +1,6 @@
 use super::*;
 
-const COLUMNS_COUNT: usize = 8;
+const COLUMNS_COUNT: usize = 16;
 
 const SHORT_STRING_ERROR: &str = "The string can't be parsed into the short string.";
 
