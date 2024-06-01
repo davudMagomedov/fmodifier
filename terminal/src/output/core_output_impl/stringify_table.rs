@@ -127,6 +127,22 @@ impl StringRectangle {
         other.place_right(self)
     }
 
+    /// The `place_bottom` function takes other string rectangle and places it in the bottom of the
+    /// current one.
+    pub fn place_bottom(mut self, other: StringRectangle) -> StringRectangle {
+        other
+            .lines
+            .into_iter()
+            .for_each(|line_of_other| self.push_bottom(line_of_other));
+        self
+    }
+
+    /// The `place_top` function takes other string rectangle and places it in the top of the
+    /// current one.
+    pub fn place_top(self, other: StringRectangle) -> StringRectangle {
+        other.place_bottom(self)
+    }
+
     /// The `adjust` function does either expand given string to make its len the same like in
     /// lines or expand each line to make their len the same like in the string.
     ///
