@@ -5,16 +5,16 @@ pub const SHORT_STRING_MAX_LEN: usize = 4;
 /// There's names for rows and columns but names for columns need to be short.
 pub struct Table {
     row_names: Vec<String>,
-    column_names: Vec<ShortString>,
+    column_names: Vec<String>,
 
     // There's invariant: `data.len == column_names.len * row_names.len`.
     //
     // `data`: `[COLUMNS, COLUMNS, COLUMNS, ...]`
-    data: Vec<ShortString>,
+    data: Vec<String>,
 }
 
 impl Table {
-    pub fn new(row_names: Vec<String>, column_names: Vec<ShortString>) -> Self {
+    pub fn new(row_names: Vec<String>, column_names: Vec<String>) -> Self {
         let columns_count = column_names.len();
         let rows_count = row_names.len();
 
@@ -23,7 +23,7 @@ impl Table {
             row_names,
 
             data: (0..columns_count * rows_count)
-                .map(|_| ShortString::new("".to_string()).unwrap())
+                .map(|_| "".to_string())
                 .collect::<Vec<_>>(),
         }
     }
@@ -34,13 +34,13 @@ impl Table {
     }
 
     /// The `column_names` function returns slice of names for each column.
-    pub fn column_names(&self) -> &[ShortString] {
+    pub fn column_names(&self) -> &[String] {
         &self.column_names
     }
 
     /// The `get` function returns value in appropriate cell. If there's no appropriate cell, the
     /// function return `None`.
-    pub fn get(&self, row: usize, column: usize) -> Option<&ShortString> {
+    pub fn get(&self, row: usize, column: usize) -> Option<&String> {
         if column >= self.column_names.len() {
             return None;
         }
@@ -50,7 +50,7 @@ impl Table {
 
     /// The `write` function writes the value to appropriate cell. If there's no appropriate cell,
     /// the function panics.
-    pub fn write(&mut self, value: ShortString, row: usize, column: usize) {
+    pub fn write(&mut self, value: String, row: usize, column: usize) {
         if column >= self.column_names.len() {
             panic!("There's no appropriate cell");
         }
@@ -61,24 +61,6 @@ impl Table {
             .expect("There's no appropriate cell");
 
         *cell = value
-    }
-}
-
-/// The `ShortString` just gives guarantees that inner string has size less than some setted value.
-pub struct ShortString(String);
-
-impl ShortString {
-    /// The `new` function returns `None` if size of the string in argument is bit enough.
-    pub fn new(string: String) -> Option<ShortString> {
-        if string.len() <= SHORT_STRING_MAX_LEN {
-            Some(ShortString(string))
-        } else {
-            None
-        }
-    }
-
-    pub fn get(&self) -> &str {
-        &self.0
     }
 }
 
