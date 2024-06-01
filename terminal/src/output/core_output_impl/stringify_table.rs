@@ -200,7 +200,7 @@ fn table_data_to_rectangle(table: &Table) -> StringRectangle {
         .map(|column_index| {
             StringRectangle::new_with_lines(
                 &(0..table.row_names().len())
-                    .map(|row_index| table.get(row_index, column_index).unwrap().get())
+                    .map(|row_index| table.get(row_index, column_index).unwrap().as_str())
                     .collect::<Vec<_>>(),
             )
             .place_right(rectangle_tab(table.row_names().len()))
