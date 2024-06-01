@@ -151,97 +151,46 @@ impl StringRectangle {
 
 impl ToString for StringRectangle {
     fn to_string(&self) -> String {
+        if self.lines.is_empty() {
+            return "".to_string();
+        }
+
         let mut string_rect = "".to_string();
 
         self.lines
             .iter()
-            .for_each(|line| string_rect.push_str(line));
-
-        string_rect
-    }
-}
-
-struct Matrix {
-    // INVARIANT: `data.len() % row_count == 0`, because `data.len() % row_count` is column count.
-
-    // data: [...COLUMNS, ...COLUMNS, ...COLUMNS, ...]
-    data: Vec<String>,
-    row_count: usize,
-}
-
-impl Matrix {
-    pub fn get(&self, row: usize, column: usize) -> Option<&String> {
-        let column_count = self.data.len() / self.row_count;
-        self.data.get(row * column_count + column)
-    }
-}
-
-/// The `from<Table>` copies all data in fields to new matrix, columns names and row names. For
-/// example, if you had table 3x4 (3 rows and 4 columns), you'll get matrix 4x5: column names and
-/// row names are added to data.
-impl From<&Table> for Matrix {
-    fn from(value: &Table) -> Self {
-        let column_names = value.column_names();
-        let row_names = value.row_names();
-
-        let mut matrix_data: Vec<String> = Vec::new();
-
-        matrix_data.extend(
-            column_names
-                .into_iter()
-                .map(|short_string| short_string.get().to_string()),
-        );
-
-        let table_column_count = column_names.len();
-        let table_row_count = row_names.len();
-
-        (0..table_row_count).for_each(|row_index| {
-            matrix_data.push(row_names[row_index].clone());
-            matrix_data.extend((0..table_column_count).map(|column_index| {
-                value
-                    .get(row_index, column_index)
-                    .unwrap() // `row_index` and `column_index` are right in any way.
-                    .get()
-                    .to_string()
-            }));
-        });
-
-        Matrix {
-            data: matrix_data,
-            row_count: table_row_count + 1,
-        }
-    }
-}
-
-impl ToString for Matrix {
-    fn to_string(&self) -> String {
-        let column_count = self.data.len() / self.row_count;
-
-        let maybe_rectangle = (0..column_count)
-            .map(|column_index| {
-                let lines = &(0..self.row_count)
-                    .map(|row_index| self.get(row_index, column_index).unwrap().as_str())
-                    .collect::<Vec<&str>>();
-
-                StringRectangle::new_with_lines(lines)
-            })
-            .reduce(|acc, str_rect| {
-                let tab = StringRectangle::new_with_lines(&vec![" "; self.row_count]);
-                acc.place_right(tab).place_right(str_rect)
+            .take(self.lines.len() - 1)
+            .for_each(|line| {
+                string_rect.push_str(line);
+                string_rect.push('\n');
             });
 
-        let rectangle = match maybe_rectangle {
-            Some(rect) => rect,
-            None => return "".to_string(),
-        };
+        string_rect.push_str(&self.lines[self.lines.len() - 1]);
 
-        rectangle.to_string()
+        string_rect
     }
 }
 
 /// The `stringify_table` function writes to given string stringified given table. There's no extra
 /// characters in the end and in the start.
 pub fn stringify_table(table: &Table, write_to: &mut String) {
-    let matrix = Matrix::from(table);
-    write_to.push_str(&matrix.to_string());
+    todo!();
+}
+
+#[test]
+fn str_rect_test() {
+    let sr_1 = StringRectangle::new_with_lines(&vec!["ABC", "AB", "ABCDE", "AAA"]);
+    assert_eq!(sr_1.to_string(), "ABC  \nAB   \nABCDE\nAAA  ");
+
+    let sr_2 = StringRectangle::new_with_lines(&vec!["H E", "TPAA PLEN", "OR", "P  T"]);
+    assert_eq!(
+        sr_2.to_string(),
+        "H E      \nTPAA PLEN\nOR       \nP  T     "
+    );
+
+    let sr_3 = sr_1.place_right(sr_2);
+    assert_eq!(
+        sr_3.to_string(),
+        "ABC  H E      \nAB   TPAA PLEN\nABCDEOR       \nAAA  P  T     "
+    );
 }
