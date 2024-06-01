@@ -45,7 +45,7 @@ impl Table {
             return None;
         }
 
-        self.data.get(row * self.row_names.len() + column)
+        self.data.get(row * self.column_names.len() + column)
     }
 
     /// The `write` function writes the value to appropriate cell. If there's no appropriate cell,
@@ -57,7 +57,7 @@ impl Table {
 
         let cell = self
             .data
-            .get_mut(row * self.row_names.len() + column)
+            .get_mut(row * self.column_names.len() + column)
             .expect("There's no appropriate cell");
 
         *cell = value
