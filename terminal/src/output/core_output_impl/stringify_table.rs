@@ -187,6 +187,14 @@ impl ToString for StringRectangle {
     }
 }
 
+fn rectangle_tab(line_count: usize) -> StringRectangle {
+    StringRectangle::new_with_lines(&vec![" "; line_count])
+}
+
+fn rectangle_row_tab(line_count: usize) -> StringRectangle {
+    StringRectangle::new_with_lines(&vec![" | "; line_count])
+}
+
 fn table_data_to_rectangle(table: &Table) -> StringRectangle {
     (0..table.column_names().len())
         .map(|column_index| {
@@ -195,6 +203,7 @@ fn table_data_to_rectangle(table: &Table) -> StringRectangle {
                     .map(|row_index| table.get(row_index, column_index).unwrap().get())
                     .collect::<Vec<_>>(),
             )
+            .place_right(rectangle_tab(table.row_names().len()))
         })
         .reduce(|acc, rect| acc.place_right(rect))
         .unwrap_or_else(|| StringRectangle::new())
@@ -203,25 +212,21 @@ fn table_data_to_rectangle(table: &Table) -> StringRectangle {
 /// The `stringify_table` function writes to given string stringified given table. There's no extra
 /// characters in the end and in the start.
 pub fn stringify_table(table: &Table, write_to: &mut String) {
-    // let columns_rectangle = StringRectangle::new_with_lines(
-    //     &table
-    //         .column_names()
-    //         .into_iter()
-    //         .map(|short_string| short_string.get())
-    //         .collect::<Vec<_>>(),
-    // );
-    // let rows_rectangle = StringRectangle::new_with_lines(
-    //     &table
-    //         .row_names()
-    //         .into_iter()
-    //         .map(|string| string.as_str())
-    //         .collect::<Vec<_>>(),
-    // );
-    // let empty_rectangle = StringRectangle::fill(1, 1, ' ');
-    // let data_rectangle = table_data_to_rectangle(table);
-    //
-    // let mut rectangle = empty_rectangle;
-    unimplemented!();
+    let rows_rectangle = StringRectangle::new_with_lines(
+        &table
+            .row_names()
+            .into_iter()
+            .map(|string| string.as_str())
+            .collect::<Vec<_>>(),
+    );
+    let data_rectangle = table_data_to_rectangle(table);
+
+    // [ rows_rectangle  ] [ data_rectangle    ]
+    let rectangle = rows_rectangle
+        .place_right(rectangle_row_tab(table.row_names().len()))
+        .place_right(data_rectangle);
+
+    write_to.push_str(&rectangle.to_string());
 }
 
 #[test]
