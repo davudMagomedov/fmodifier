@@ -17,7 +17,8 @@ fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
     let offset = start % COLUMNS_COUNT;
     for (byte_index, &byte) in bytes.into_iter().enumerate() {
         table.write(
-            byte.to_string(),
+            // byte.to_string(),
+            format!("{:02x}", byte),
             (offset + byte_index) / COLUMNS_COUNT,
             (offset + byte_index) % COLUMNS_COUNT,
         )
