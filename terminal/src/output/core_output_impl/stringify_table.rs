@@ -192,7 +192,7 @@ fn rectangle_tab(line_count: usize) -> StringRectangle {
 }
 
 fn rectangle_row_tab(line_count: usize) -> StringRectangle {
-    StringRectangle::new_with_lines(&vec![" | "; line_count])
+    StringRectangle::new_with_lines(&vec![" │ "; line_count])
 }
 
 fn table_data_to_rectangle(table: &Table) -> StringRectangle {
