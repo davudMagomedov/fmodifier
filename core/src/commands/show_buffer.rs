@@ -2,8 +2,6 @@ use super::*;
 
 const COLUMNS_COUNT: usize = 16;
 
-const SHORT_STRING_ERROR: &str = "The string can't be parsed into the short string.";
-
 /// The `make_table` creates table with appropriate names for columns and rows. It's take two
 /// arguments: bytes and index those bytes start with.
 fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
