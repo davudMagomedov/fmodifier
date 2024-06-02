@@ -41,11 +41,23 @@ fn tokenize_integer(word: &str) -> Token {
     debug_assert!(is_integer(word));
     debug_assert!(!word.is_empty());
 
-    Token::uinteger(word.parse::<usize>().unwrap())
+    if word.get(0..2).map(|substr| substr == "0x").unwrap_or(false) {
+        Token::uinteger(usize::from_str_radix(&word[2..], 16).unwrap())
+    } else {
+        Token::uinteger(usize::from_str_radix(word, 10).unwrap())
+    }
 }
 
 fn is_integer(word: &str) -> bool {
-    word.chars().all(|ch| matches!(ch, '0'..='9'))
+    if word.get(0..2).map(|substr| substr == "0x").unwrap_or(false) {
+        word.len() > 2
+            && word
+                .chars()
+                .skip(2)
+                .all(|ch| matches!(ch, '0'..='9' | 'a' ..= 'f' | 'A' ..= 'F'))
+    } else {
+        word.chars().all(|ch| matches!(ch, '0'..='9'))
+    }
 }
 
 /// The `tokenize_name` returns `Token::Word` taking a word.
