@@ -1,8 +1,4 @@
-pub const SHORT_STRING_MAX_LEN: usize = 4;
-
 /// The `Table` structure is... table.
-///
-/// There's names for rows and columns but names for columns need to be short.
 pub struct Table {
     row_names: Vec<String>,
     column_names: Vec<String>,
@@ -65,18 +61,9 @@ impl Table {
 }
 
 pub enum OtherInfo {
-    Table2Column {
-        data: Vec<(String, String)>,
-    },
+    Table2Column { data: Vec<(String, String)> },
 
-    /// There need to be invariant: `data.len == columns * rows`.
-    ///
-    /// [SS, SS, SS, SS, SS, SS, SS, SS, SS, SS]
-    /// |__________________||__________________|
-    ///          ROW                ROW
-    BigTable {
-        table: Table,
-    },
+    BigTable { table: Table },
 }
 
 pub type InfoLine = String;
