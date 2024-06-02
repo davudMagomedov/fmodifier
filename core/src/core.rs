@@ -76,6 +76,7 @@ impl Core {
                 buffer_start,
                 file_start,
             ),
+            CoreCommand::OpenFile { file_name } => open_file(self, file_name),
         }
     }
 

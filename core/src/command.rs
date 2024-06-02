@@ -50,4 +50,7 @@ pub enum CoreCommand<'a> {
         buffer_start: usize,
         file_start: usize,
     },
+    OpenFile {
+        file_name: String,
+    },
 }
