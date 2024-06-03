@@ -14,6 +14,7 @@ mod from_file_to_buffer;
 mod make_buffer;
 mod open_file;
 mod show_buffer;
+mod show_file;
 
 pub use buffer_info::*;
 pub use buffer_set_byte::*;
@@ -24,3 +25,4 @@ pub use from_file_to_buffer::*;
 pub use make_buffer::*;
 pub use open_file::*;
 pub use show_buffer::*;
+pub use show_file::*;

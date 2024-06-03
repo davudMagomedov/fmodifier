@@ -133,6 +133,17 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 file_name: file_name.clone(),
             })
         }
+        "show_file" => {
+            let Some(Token::Word(file_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(start)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(end)) = tokens.get(3) else { return Err(ParseError::unknown_command_template()) };
+
+            Ok(CoreCommand::ShowFile {
+                file_name,
+                start: *start,
+                end: *end,
+            })
+        }
         _ => Err(ParseError::unknown_command_template()),
     }
 }

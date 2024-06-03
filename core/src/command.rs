@@ -53,4 +53,9 @@ pub enum CoreCommand<'a> {
     OpenFile {
         file_name: String,
     },
+    ShowFile {
+        file_name: &'a str,
+        start: usize,
+        end: usize,
+    },
 }

@@ -77,6 +77,11 @@ impl Core {
                 file_start,
             ),
             CoreCommand::OpenFile { file_name } => open_file(self, file_name),
+            CoreCommand::ShowFile {
+                file_name,
+                start,
+                end,
+            } => show_file(self, file_name, start, end),
         }
     }
 
