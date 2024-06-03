@@ -5,11 +5,13 @@ use std::collections::VecDeque;
 const ANY_INDEX: usize = 0;
 const ANY_USIZE_VALUE: usize = 0;
 
+const EMPTY_CHAR: char = ' ';
+
 const UTF_8_ERROR: &str = "UTF-8 error";
 
 struct StringRectangle {
     // INVARIANT:
-    // - All strings in `lines` are the same.
+    // - The sizes of all lines in `lines` are the same.
 
     //
     lines: VecDeque<String>,
@@ -20,6 +22,21 @@ impl StringRectangle {
         StringRectangle {
             lines: VecDeque::new(),
         }
+    }
+
+    /// The `length` function returns lenght of the string rectangle. It can return 0 that means
+    /// the rectangle is empty.
+    pub fn length(&self) -> usize {
+        self.lines.len()
+    }
+
+    /// The `width` function returns width of the string rectangle. It can return 0 that means the
+    /// rectangle is empty.
+    pub fn width(&self) -> usize {
+        self.lines
+            .get(ANY_INDEX)
+            .map(|string| string.len())
+            .unwrap_or(0)
     }
 
     /// The `new_with_lines` function returns string rectangle by the given lines.
@@ -96,51 +113,47 @@ impl StringRectangle {
         self.lines.push_front(inserting_line);
     }
 
-    /// The `place_right` takes other string rectangle and places it in right of the current one.
-    ///
-    /// Count of lines of other string rectangle must be the same as in the current one. Otherwise,
-    /// the function will panic.
-    pub fn place_right(mut self, other: StringRectangle) -> StringRectangle {
-        debug_assert_eq!(self.lines.len(), other.lines.len());
-
-        if self.lines.len() != other.lines.len() {
-            panic!(
-                "Two rectangles has a different count of lines: {} and {}",
-                self.lines.len(),
-                other.lines.len()
-            );
-        }
-
-        for (line_index, line) in self.lines.iter_mut().enumerate() {
-            // Each line in `self.lines` has the same size A and each line in `other.lines` has the
-            // same size B. So, new string rectangle will have lines with the same size A + B.
-            line.push_str(&other.lines[line_index]);
-        }
-
-        self
+    pub fn place_right(self, other: StringRectangle) -> StringRectangle {
+        unimplemented!();
     }
 
     /// The `place_left` takes other string rectangle and places it in left of the current one.
     ///
     /// Count of lines of other string rectangle must be the same as in the current one.
     pub fn place_left(self, other: StringRectangle) -> StringRectangle {
-        other.place_right(self)
+        unimplemented!();
     }
 
     /// The `place_bottom` function takes other string rectangle and places it in the bottom of the
     /// current one.
     pub fn place_bottom(mut self, other: StringRectangle) -> StringRectangle {
-        other
-            .lines
-            .into_iter()
-            .for_each(|line_of_other| self.push_bottom(line_of_other));
-        self
+        unimplemented!();
     }
 
     /// The `place_top` function takes other string rectangle and places it in the top of the
     /// current one.
     pub fn place_top(self, other: StringRectangle) -> StringRectangle {
-        other.place_bottom(self)
+        unimplemented!();
+    }
+
+    /// The `place_bottom_unchecked` places a string rectange in the bottom of the current one
+    /// without adjusting.
+    ///
+    /// #### SAFETY
+    /// - `self.width == other.width` or either `self` or `other` is empty.
+    unsafe fn place_bottom_unchecked(mut self, other: StringRectangle) -> StringRectangle {
+        self.lines.extend(other.lines);
+        self
+    }
+
+    /// The `place_top_unchecked` places a string rectangle in the top of the current one without
+    /// adjusting.
+    ///
+    /// #### SAFETY:
+    /// - `self.width == other.width` or either `self` or `other` is empty.
+    unsafe fn place_top_unchecked(self, mut other: StringRectangle) -> StringRectangle {
+        other.lines.extend(self.lines);
+        other
     }
 
     /// The `adjust` function does either expand given string to make its len the same like in
