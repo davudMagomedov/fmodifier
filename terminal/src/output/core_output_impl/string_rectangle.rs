@@ -192,7 +192,7 @@ impl StringRectangle {
     ///     [CONV   ]
     ///     [FMODIF ]
     /// ]
-    /// s1.place_right_bottom(s2) is 5x12 rectangle = [
+    /// s1.place_left_top(s2) is 5x12 rectangle = [
     ///     [HELLO  DAVUD]
     ///     [CONV   LEON ]
     ///     [FMODIF HI   ]
@@ -246,7 +246,7 @@ impl StringRectangle {
     ///     [CONV   ]
     ///     [FMODIF ]
     /// ]
-    /// s1.place_right_bottom(s2) is 5x12 rectangle = [
+    /// s1.place_left_bottom(s2) is 5x12 rectangle = [
     ///     [       DAVUD]
     ///     [       LEON ]
     ///     [HELLO  HI   ]
@@ -300,7 +300,7 @@ impl StringRectangle {
     ///     [CONV   ]
     ///     [FMODIF ]
     /// ]
-    /// s2.place_right_bottom(s1) is 5x12 rectangle = [
+    /// s2.place_bottom_left(s1) is 5x12 rectangle = [
     ///     [HELLO  ]
     ///     [CONV   ]
     ///     [FMODIF ]
@@ -353,7 +353,7 @@ impl StringRectangle {
     ///     [CONV   ]
     ///     [FMODIF ]
     /// ]
-    /// s2.place_right_bottom(s1) is 5x12 rectangle = [
+    /// s2.place_bottom_right(s1) is 5x12 rectangle = [
     ///     [HELLO  ]
     ///     [CONV   ]
     ///     [FMODIF ]
@@ -406,7 +406,7 @@ impl StringRectangle {
     ///     [CONV   ]
     ///     [FMODIF ]
     /// ]
-    /// s2.place_right_bottom(s1) is 5x12 rectangle = [
+    /// s2.place_top_left(s1) is 5x12 rectangle = [
     ///     [DAVUD  ]
     ///     [LEON   ]
     ///     [HI     ]
@@ -428,6 +428,59 @@ impl StringRectangle {
             // SAFETY: `other.place_right(empty_rectangle)` is `[other.length X self.width]`
             // rectangle and `self` is `[self.length X self.width]` rectangle.
             unsafe { self.place_top_unchecked(other.place_right(empty_rectangle)) }
+        } else {
+            let empty_rectangle_length = self.length();
+            let empty_rectangle_width = other.width() - self.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `self.place_right(empty_rectangle)` is `[self.length X other.width]` and
+            // `other` is `[other.length X other.width]`.
+            unsafe { other.place_bottom_unchecked(self.place_right(empty_rectangle)) }
+        }
+    }
+
+    /// The `place_top_right` function takes a string rectangle and places in to the top of the
+    /// current one. If the current string rectangle has width greater than given one, the function
+    /// will place given string in right.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s2.place_top_right(s1) is 5x12 rectangle = [
+    ///     [  DAVUD]
+    ///     [  LEON ]
+    ///     [  HI   ]
+    ///     [  BAN  ]
+    ///     [  SOME ]
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// ```
+    pub fn place_top_right(self, other: StringRectangle) -> StringRectangle {
+        if self.width() >= other.width() {
+            let empty_rectangle_length = other.length();
+            let empty_rectangle_width = self.width() - other.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `other.place_left(empty_rectangle)` is `[other.length X self.width]`
+            // rectangle and `self` is `[self.length X self.width]` rectangle.
+            unsafe { self.place_top_unchecked(other.place_left(empty_rectangle)) }
         } else {
             let empty_rectangle_length = self.length();
             let empty_rectangle_width = other.width() - self.width();
