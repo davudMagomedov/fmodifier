@@ -24,6 +24,14 @@ impl Table {
         }
     }
 
+    pub fn row_count(&self) -> usize {
+        self.row_names().len()
+    }
+
+    pub fn column_count(&self) -> usize {
+        self.column_names().len()
+    }
+
     /// The `row_names` function returns slice of names for each row.
     pub fn row_names(&self) -> &[String] {
         &self.row_names
