@@ -4,11 +4,11 @@ use core::output::*;
 
 use std::collections::VecDeque;
 
-fn rectangle_tab(line_count: usize) -> StringRectangle {
+fn rectangle_elements_vseparator(line_count: usize) -> StringRectangle {
     StringRectangle::new_with_lines(&vec![" "; line_count])
 }
 
-fn rectangle_row_tab(line_count: usize) -> StringRectangle {
+fn rectangle_row_element_separator(line_count: usize) -> StringRectangle {
     StringRectangle::new_with_lines(&vec![" │ "; line_count])
 }
 
