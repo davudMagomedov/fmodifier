@@ -159,11 +159,10 @@ impl StringRectangle {
             let empty_rectangle =
                 StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
 
-            (
+            other.place_left(
                 // SAFETY: `self.width == empty_rectangle.width`.
-                unsafe { self.place_bottom_unchecked(empty_rectangle) }
+                unsafe { self.place_bottom_unchecked(empty_rectangle) },
             )
-            .place_right(other)
         }
     }
 
@@ -217,11 +216,67 @@ impl StringRectangle {
             let empty_rectangle =
                 StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
 
-            (
+            other.place_left(
                 // SAFETY: `self.width == empty_rectangle.width`.
-                unsafe { self.place_bottom_unchecked(empty_rectangle) }
+                unsafe { self.place_bottom_unchecked(empty_rectangle) },
             )
-            .place_right(other)
+        }
+    }
+
+    /// The `place_left_top` function takes a string rectangle and places it to the left of the
+    /// current one. If the current string rectangle has size greater than given one, the function
+    /// will place given string rectangle in top.
+    ///
+    /// If the given string rectangle is empty, the function just returns the same rectangle as it
+    /// was.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s1.place_right_bottom(s2) is 5x12 rectangle = [
+    ///     [HELLO  DAVUD]
+    ///     [CONV   LEON ]
+    ///     [FMODIF HI   ]
+    ///     [       BAN  ]
+    ///     [       SOME ]
+    /// ]
+    /// ```
+    pub fn place_left_top(self, other: StringRectangle) -> StringRectangle {
+        if self.length() >= other.length() {
+            // Then, `self.length()` is greater than `other.length()` on `larger`.
+            let empty_rectangle_length = self.length() - other.length();
+            let empty_rectangle_width = other.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            self.place_left(
+                // SAFETY: `other.width == empty_rectangle.width`.
+                unsafe { other.place_bottom_unchecked(empty_rectangle) },
+            )
+        } else {
+            // Then, `self.length()` is less than `other.length()` on `larger`.
+            let empty_rectangle_length = other.length() - self.length();
+            let empty_rectangle_width = self.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            other.place_right(
+                // SAFETY: `self.width == empty_rectangle.width`.
+                unsafe { self.place_bottom_unchecked(empty_rectangle) },
+            )
         }
     }
 
@@ -261,18 +316,6 @@ impl StringRectangle {
                 .map(|string| string.as_str())
                 .collect::<Vec<_>>(),
         )
-    }
-
-    /// The `place_bottom` function takes other string rectangle and places it in the bottom of the
-    /// current one.
-    pub fn place_bottom(mut self, other: StringRectangle) -> StringRectangle {
-        unimplemented!();
-    }
-
-    /// The `place_top` function takes other string rectangle and places it in the top of the
-    /// current one.
-    pub fn place_top(self, other: StringRectangle) -> StringRectangle {
-        unimplemented!();
     }
 
     /// The `place_bottom_unchecked` places a string rectange in the bottom of the current one
