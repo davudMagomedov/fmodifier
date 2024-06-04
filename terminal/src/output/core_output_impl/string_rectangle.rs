@@ -280,6 +280,67 @@ impl StringRectangle {
         }
     }
 
+    /// The `place_left_top` function takes a string rectangle and places it to the left of the
+    /// current one. If the current string rectangle has size greater than given one, the function
+    /// will place given string rectangle in top.
+    ///
+    /// The `place_left_bottom` function takes a string rectangle and places it to hte left of the
+    /// current one. If the current string rectangle has size greater than give one, the function
+    /// will place given string rectangle in bottom.
+    ///
+    /// If the given string rectangle is empty, the function just returns the same rectangle as it
+    /// was.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s1.place_right_bottom(s2) is 5x12 rectangle = [
+    ///     [       DAVUD]
+    ///     [       LEON ]
+    ///     [HELLO  HI   ]
+    ///     [CONV   BAN  ]
+    ///     [FMODIF SOME ]
+    /// ]
+    /// ```
+    pub fn place_left_bottom(self, other: StringRectangle) -> StringRectangle {
+        if self.length() >= other.length() {
+            // Then, `self.length()` is greater than `other.length()` on `larger`.
+            let empty_rectangle_length = self.length() - other.length();
+            let empty_rectangle_width = other.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            self.place_left(
+                // SAFETY: `other.width == empty_rectangle.width`.
+                unsafe { other.place_top_unchecked(empty_rectangle) },
+            )
+        } else {
+            // Then, `self.length()` is less than `other.length()` on `larger`.
+            let empty_rectangle_length = other.length() - self.length();
+            let empty_rectangle_width = self.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            other.place_right(
+                // SAFETY: `self.width == empty_rectangle.width`.
+                unsafe { self.place_bottom_unchecked(empty_rectangle) },
+            )
+        }
+    }
+
     /// The `place_right` function places a string rectangle in right of the current one. If number
     /// of the lengths of two rectangles are different, the function cuts one of two to another
     /// one.
