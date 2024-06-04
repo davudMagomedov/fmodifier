@@ -2,6 +2,7 @@ use super::ToOutput;
 
 use core::output::*;
 
+mod string_rectangle;
 mod stringify_table;
 mod stringify_table_2_col;
 
