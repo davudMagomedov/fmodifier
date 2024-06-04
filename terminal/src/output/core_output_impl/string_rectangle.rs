@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 const ANY_INDEX: usize = 0;
 const ANY_USIZE_VALUE: usize = 0;
 
@@ -12,14 +10,12 @@ pub struct StringRectangle {
     // - The sizes of all lines in `lines` are the same.
 
     //
-    lines: VecDeque<String>,
+    lines: Vec<String>,
 }
 
 impl StringRectangle {
     pub const fn new() -> Self {
-        StringRectangle {
-            lines: VecDeque::new(),
-        }
+        StringRectangle { lines: Vec::new() }
     }
 
     /// The `length` function returns lenght of the string rectangle. It can return 0 that means
@@ -43,8 +39,7 @@ impl StringRectangle {
     pub fn new_with_lines(lines: &[&str]) -> Self {
         debug_assert!(lines.into_iter().all(|line| !line.contains('\n')));
 
-        let mut lines: VecDeque<String> =
-            lines.into_iter().map(|string| string.to_string()).collect();
+        let mut lines: Vec<String> = lines.into_iter().map(|string| string.to_string()).collect();
 
         let max_len = lines
             .iter()
@@ -68,47 +63,9 @@ impl StringRectangle {
         debug_assert_ne!(fill_by, '\n');
 
         let line = String::from_utf8(vec![fill_by as u8; width]).expect(UTF_8_ERROR);
-        let lines = (0..height)
-            .map(|_| line.clone())
-            .collect::<VecDeque<String>>();
+        let lines = (0..height).map(|_| line.clone()).collect::<Vec<String>>();
 
         StringRectangle { lines }
-    }
-
-    /// The `push_bottom` function inserts the given line to bottom of string rectangle saving
-    /// proportion.
-    ///
-    /// The given line must not contain new line symbol.
-    pub fn push_bottom(&mut self, line_to_push: String) {
-        debug_assert!(!line_to_push.contains("\n"));
-
-        if self.lines.is_empty() {
-            self.lines.push_back(line_to_push);
-            return;
-        }
-
-        let mut inserting_line = line_to_push;
-        self.adjust(&mut inserting_line);
-
-        self.lines.push_back(inserting_line);
-    }
-
-    /// The `push_top` function inserts the given line to top of string rectangle saving
-    /// proportion.
-    ///
-    /// The given line must not contain new line symbol.
-    pub fn push_top(&mut self, line_to_push: String) {
-        debug_assert!(!line_to_push.contains("\n"));
-
-        if self.lines.is_empty() {
-            self.lines.push_back(line_to_push);
-            return;
-        }
-
-        let mut inserting_line = line_to_push;
-        self.adjust(&mut inserting_line);
-
-        self.lines.push_front(inserting_line);
     }
 
     /// The `place_right_top` function takes a string rectangle and places it to the right of the
