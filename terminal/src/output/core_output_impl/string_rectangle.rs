@@ -335,6 +335,59 @@ impl StringRectangle {
         }
     }
 
+    /// The `place_bottom_right` fucntion takes a string rectangle and places it to the bottom of
+    /// the current one. If the current string rectangle has width greater than given one, the
+    /// function will palce given string in right.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s2.place_right_bottom(s1) is 5x12 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    ///     [  DAVUD]
+    ///     [  LEON ]
+    ///     [  HI   ]
+    ///     [  BAN  ]
+    ///     [  SOME ]
+    /// ]
+    /// ```
+    pub fn place_bottom_right(self, other: StringRectangle) -> StringRectangle {
+        if self.width() >= other.width() {
+            let empty_rectangle_length = other.length();
+            let empty_rectangle_width = self.width() - other.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `other.place_right(empty_rectangle)` is `[other.length X self.width]`
+            // rectangle and `self` is `[self.length X self.width]` rectangle.
+            unsafe { self.place_bottom_unchecked(other.place_left(empty_rectangle)) }
+        } else {
+            let empty_rectangle_length = self.length();
+            let empty_rectangle_width = other.width() - self.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `self.place_right(empty_rectangle)` is `[self.length X other.width]` and
+            // `other` is `[other.length X other.width]` rectangle.
+            unsafe { other.place_top_unchecked(self.place_right(empty_rectangle)) }
+        }
+    }
+
     /// The `place_right` function places a string rectangle in right of the current one. If number
     /// of the lengths of two rectangles are different, the function cuts one of two to another
     /// one.
