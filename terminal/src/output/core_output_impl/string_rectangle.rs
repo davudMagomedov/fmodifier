@@ -72,9 +72,6 @@ impl StringRectangle {
     /// current one. If the current string rectangle has size greater than given one, the function
     /// will place given string rectangle in top.
     ///
-    /// If the given string rectangle is empty, the function just returns the same rectangle as it
-    /// was.
-    ///
     /// #### Example
     /// ```text
     /// s1 is 4x5 rectangle = [
@@ -126,9 +123,6 @@ impl StringRectangle {
     /// The `place_right_bottom` function takes a string rectangle and places it to the right of
     /// the currrent one. If the current string rectangle has size greater than given one, the
     /// function will place given string rectangle in bottom.
-    ///
-    /// If the given string rectangle is empty, the function just returns the same rectangle as it
-    /// was.
     ///
     /// #### Example
     /// ```text
@@ -184,9 +178,6 @@ impl StringRectangle {
     /// current one. If the current string rectangle has size greater than given one, the function
     /// will place given string rectangle in top.
     ///
-    /// If the given string rectangle is empty, the function just returns the same rectangle as it
-    /// was.
-    ///
     /// #### Example
     /// ```text
     /// s1 is 5x5 rectangle = [
@@ -237,16 +228,9 @@ impl StringRectangle {
         }
     }
 
-    /// The `place_left_top` function takes a string rectangle and places it to the left of the
-    /// current one. If the current string rectangle has size greater than given one, the function
-    /// will place given string rectangle in top.
-    ///
     /// The `place_left_bottom` function takes a string rectangle and places it to hte left of the
     /// current one. If the current string rectangle has size greater than give one, the function
     /// will place given string rectangle in bottom.
-    ///
-    /// If the given string rectangle is empty, the function just returns the same rectangle as it
-    /// was.
     ///
     /// #### Example
     /// ```text
@@ -295,6 +279,59 @@ impl StringRectangle {
                 // SAFETY: `self.width == empty_rectangle.width`.
                 unsafe { self.place_bottom_unchecked(empty_rectangle) },
             )
+        }
+    }
+
+    /// The `place_bottom_left` function takes a string rectangle and places it to the bottom of
+    /// the current one. If the current string rectangle has width greater than given one, the
+    /// function will place given string rectangle in left.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s2.place_right_bottom(s1) is 5x12 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    ///     [DAVUD  ]
+    ///     [LEON   ]
+    ///     [HI     ]
+    ///     [BAN    ]
+    ///     [SOME   ]
+    /// ]
+    /// ```
+    pub fn place_bottom_left(self, other: StringRectangle) -> StringRectangle {
+        if self.width() >= other.width() {
+            let empty_rectangle_length = other.length();
+            let empty_rectangle_width = self.width() - other.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `other.place_right(empty_rectangle)` is `[other.length X self.width]`
+            // rectangle and `self` is `[self.length X self.width]` rectangle.
+            unsafe { self.place_bottom_unchecked(other.place_right(empty_rectangle)) }
+        } else {
+            let empty_rectangle_length = self.length();
+            let empty_rectangle_width = other.width() - self.width();
+
+            let empty_rectangle =
+                StringRectangle::fill(empty_rectangle_width, empty_rectangle_length, EMPTY_CHAR);
+
+            // SAFETY: `self.place_right(empty_rectangle)` is `[self.length X other.width]` and
+            // `other` is `[other.length X other.width]` rectangle.
+            unsafe { other.place_top_unchecked(self.place_right(empty_rectangle)) }
         }
     }
 
