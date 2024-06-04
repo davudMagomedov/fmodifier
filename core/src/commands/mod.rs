@@ -16,6 +16,10 @@ mod open_file;
 mod show_buffer;
 mod show_file;
 
+mod make_table;
+
+use make_table::make_table;
+
 pub use buffer_info::*;
 pub use buffer_set_byte::*;
 pub use create_file::*;
