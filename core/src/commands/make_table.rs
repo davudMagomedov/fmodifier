@@ -10,7 +10,7 @@ pub fn make_table(bytes: &[u8], start: usize) -> OtherInfo {
         .map(|row_index| (row_index * COLUMNS_COUNT).to_string())
         .collect();
 
-    let mut table = Table::new(row_names, column_names);
+    let mut table = Table::new_filled(row_names, column_names, "  ".to_string());
 
     let offset = start % COLUMNS_COUNT;
     for (byte_index, &byte) in bytes.into_iter().enumerate() {
