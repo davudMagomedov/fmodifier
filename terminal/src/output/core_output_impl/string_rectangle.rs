@@ -5,12 +5,13 @@ const EMPTY_CHAR: char = ' ';
 
 const UTF_8_ERROR: &str = "UTF-8 error";
 
+#[derive(Debug, Clone)]
 pub struct StringRectangle {
     // INVARIANT:
     // - The sizes of all lines in `lines` are the same.
 
     //
-    lines: Vec<String>,
+    lines: Vec<Vec<char>>,
 }
 
 impl StringRectangle {
@@ -33,37 +34,16 @@ impl StringRectangle {
             .unwrap_or(0)
     }
 
-    /// The `new_with_lines` function returns string rectangle by the given lines.
-    ///
-    /// Any line in given list of lines must not have `\n` character.
-    pub fn new_with_lines(lines: &[&str]) -> Self {
-        debug_assert!(lines.into_iter().all(|line| !line.contains('\n')));
-
-        let mut lines: Vec<String> = lines.into_iter().map(|string| string.to_string()).collect();
-
-        let max_len = lines
-            .iter()
-            .max_by_key(|string| string.len())
-            .map(|string| string.len())
-            .unwrap_or(ANY_USIZE_VALUE);
-
-        lines.iter_mut().for_each(|string| {
-            let missing_spaces =
-                String::from_utf8(vec![b' '; max_len - string.len()]).expect(UTF_8_ERROR);
-            string.push_str(&missing_spaces);
-        });
-
-        StringRectangle { lines }
-    }
-
     /// The `fill` function creates string rectangle with given shape and fills it by the given
     /// value.
     pub fn fill(width: usize, height: usize, fill_by: char) -> StringRectangle {
         debug_assert!(fill_by.is_ascii());
         debug_assert_ne!(fill_by, '\n');
 
-        let line = String::from_utf8(vec![fill_by as u8; width]).expect(UTF_8_ERROR);
-        let lines = (0..height).map(|_| line.clone()).collect::<Vec<String>>();
+        let line = vec![fill_by; width];
+        let lines = (0..height)
+            .map(|_| line.clone())
+            .collect::<Vec<Vec<char>>>();
 
         StringRectangle { lines }
     }
@@ -498,38 +478,34 @@ impl StringRectangle {
     /// of the lengths of two rectangles are different, the function cuts one of two to another
     /// one.
     fn place_right(self, other: StringRectangle) -> StringRectangle {
-        let lines = self
-            .lines
-            .into_iter()
-            .zip(other.lines.into_iter())
-            .map(|(self_line, other_line)| self_line + &other_line)
-            .collect::<Vec<_>>();
-
-        StringRectangle::new_with_lines(
-            &lines
-                .iter()
-                .map(|string| string.as_str())
-                .collect::<Vec<_>>(),
-        )
+        StringRectangle {
+            lines: self
+                .lines
+                .into_iter()
+                .zip(other.lines.into_iter())
+                .map(|(mut self_line, other_line)| {
+                    self_line.extend(other_line);
+                    self_line
+                })
+                .collect(),
+        }
     }
 
     /// The `place_left` function places given string rectangle in the left of the current one. If
     /// lengths of the two rectangles are different, the function cuts one of two to length of
     /// another one.
     pub fn place_left(self, other: StringRectangle) -> StringRectangle {
-        let lines = self
-            .lines
-            .into_iter()
-            .zip(other.lines.into_iter())
-            .map(|(self_line, other_line)| other_line + &self_line)
-            .collect::<Vec<_>>();
-
-        StringRectangle::new_with_lines(
-            &lines
-                .iter()
-                .map(|string| string.as_str())
-                .collect::<Vec<_>>(),
-        )
+        StringRectangle {
+            lines: self
+                .lines
+                .into_iter()
+                .zip(other.lines.into_iter())
+                .map(|(self_line, mut other_line)| {
+                    other_line.extend(self_line);
+                    other_line
+                })
+                .collect(),
+        }
     }
 
     /// The `place_bottom_unchecked` places a string rectange in the bottom of the current one
@@ -551,26 +527,28 @@ impl StringRectangle {
         other.lines.extend(self.lines);
         other
     }
+}
 
-    /// The `adjust` function does either expand given string to make its len the same like in
-    /// lines or expand each line to make their len the same like in the string.
-    ///
-    /// A string expands filling a space char.
-    fn adjust(&mut self, line_to_push: &mut String) {
-        let line_len = line_to_push.len();
-        let rectangle_len = self.lines[ANY_INDEX].len();
+impl From<&str> for StringRectangle {
+    fn from(value: &str) -> Self {
+        let lines: Vec<&str> = value.lines().collect();
 
-        if rectangle_len >= line_len {
-            let missing_spaces =
-                unsafe { String::from_utf8_unchecked(vec![b' '; rectangle_len - line_len]) };
-            line_to_push.push_str(&missing_spaces);
-        } else {
-            let missing_spaces =
-                unsafe { String::from_utf8_unchecked(vec![b' '; line_len - rectangle_len]) };
-            for line in &mut self.lines {
-                line.push_str(&missing_spaces);
-            }
-        }
+        let max_len = lines
+            .iter()
+            .max_by_key(|&&string| string.len())
+            .unwrap_or(&"")
+            .len();
+
+        let lines: Vec<_> = lines
+            .into_iter()
+            .map(|line| {
+                line.chars()
+                    .chain(vec![' '; max_len - line.len()])
+                    .collect::<Vec<_>>()
+            })
+            .collect();
+
+        StringRectangle { lines }
     }
 }
 
@@ -580,18 +558,20 @@ impl ToString for StringRectangle {
             return "".to_string();
         }
 
-        let mut string_rect = "".to_string();
+        let mut string = String::new();
 
-        self.lines
-            .iter()
-            .take(self.lines.len() - 1)
-            .for_each(|line| {
-                string_rect.push_str(line);
-                string_rect.push('\n');
-            });
+        for line in &self.lines[..self.lines.len() - 1] {
+            for &ch in line {
+                string.push(ch);
+            }
+            string.push('\n');
+        }
 
-        string_rect.push_str(&self.lines[self.lines.len() - 1]);
+        for &ch in &self.lines[self.lines.len() - 1] {
+            string.push(ch);
+        }
 
-        string_rect
+        string
     }
 }
+
