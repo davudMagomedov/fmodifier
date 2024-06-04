@@ -167,6 +167,35 @@ impl StringRectangle {
         }
     }
 
+    /// The `place_right_bottom` function takes a string rectangle and places it to the right of
+    /// the currrent one. If the current string rectangle has size greater than given one, the
+    /// function will place given string rectangle in bottom.
+    ///
+    /// If the given string rectangle is empty, the function just returns the same rectangle as it
+    /// was.
+    ///
+    /// #### Example
+    /// ```text
+    /// s1 is 5x5 rectangle = [
+    ///     [DAVUD]
+    ///     [LEON ]
+    ///     [HI   ]
+    ///     [BAN  ]
+    ///     [SOME ]
+    /// ]
+    /// s2 is 3x7 rectangle = [
+    ///     [HELLO  ]
+    ///     [CONV   ]
+    ///     [FMODIF ]
+    /// ]
+    /// s1.place_right_bottom(s2) is 5x12 rectangle = [
+    ///     [DAVUD       ]
+    ///     [LEON        ]
+    ///     [HI   HELLO  ]
+    ///     [BAN  CONV   ]
+    ///     [SOME FMODIF ]
+    /// ]
+    /// ```
     pub fn place_right_bottom(self, other: StringRectangle) -> StringRectangle {
         if self.length() >= other.length() {
             // Then, `self.length()` is greater than `other.length()` on `larger`.
