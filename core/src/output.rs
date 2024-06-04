@@ -24,6 +24,21 @@ impl Table {
         }
     }
 
+    /// The `new_filled` function creates new `Table` which values filled by given value.
+    pub fn new_filled(row_names: Vec<String>, column_names: Vec<String>, fill_by: String) -> Self {
+        let columns_count = column_names.len();
+        let rows_count = row_names.len();
+
+        Table {
+            column_names,
+            row_names,
+
+            data: (0..columns_count * rows_count)
+                .map(|_| fill_by.clone())
+                .collect::<Vec<_>>(),
+        }
+    }
+
     pub fn row_count(&self) -> usize {
         self.row_names().len()
     }
