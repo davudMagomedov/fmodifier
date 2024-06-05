@@ -92,6 +92,12 @@ impl Core {
                 right_buffer_name,
                 new_buffer_name,
             } => merge_buffers(self, left_buffer_name, right_buffer_name, new_buffer_name),
+            CoreCommand::PullOutSlice {
+                buffer_name,
+                new_buffer_name,
+                start,
+                end,
+            } => pull_out_slice(self, buffer_name, new_buffer_name, start, end),
         }
     }
 

@@ -175,10 +175,10 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             let Some(Token::Word(left_buffer_name)) = tokens.get(1) else {
                 return Err(ParseError::unknown_command_template())
             };
-            let Some(Token::Word(right_buffer_name)) = tokens.get(1) else {
+            let Some(Token::Word(right_buffer_name)) = tokens.get(2) else {
                 return Err(ParseError::unknown_command_template())
             };
-            let Some(Token::Word(new_buffer_name)) = tokens.get(1) else {
+            let Some(Token::Word(new_buffer_name)) = tokens.get(3) else {
                 return Err(ParseError::unknown_command_template())
             };
 
@@ -186,6 +186,27 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 left_buffer_name,
                 right_buffer_name,
                 new_buffer_name: new_buffer_name.clone(),
+            })
+        }
+        "pull_out_slice" => {
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::Word(new_buffer_name)) = tokens.get(2) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::UInt(start)) = tokens.get(3) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::UInt(end)) = tokens.get(4) else {
+                return Err(ParseError::unknown_command_template())
+            };
+
+            Ok(CoreCommand::PullOutSlice {
+                buffer_name,
+                new_buffer_name: new_buffer_name.clone(),
+                start: *start,
+                end: *end,
             })
         }
         _ => Err(ParseError::unknown_command_template()),

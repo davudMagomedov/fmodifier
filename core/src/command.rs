@@ -68,4 +68,10 @@ pub enum CoreCommand<'a> {
         right_buffer_name: &'a str,
         new_buffer_name: String,
     },
+    PullOutSlice {
+        buffer_name: &'a str,
+        new_buffer_name: String,
+        start: usize,
+        end: usize,
+    },
 }

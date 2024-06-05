@@ -15,6 +15,7 @@ mod from_file_to_buffer;
 mod make_buffer;
 mod merge_buffers;
 mod open_file;
+mod pull_out_slice;
 mod show_buffer;
 mod show_file;
 
@@ -28,6 +29,7 @@ pub use from_file_to_buffer::*;
 pub use make_buffer::*;
 pub use merge_buffers::*;
 pub use open_file::*;
+pub use pull_out_slice::*;
 pub use show_buffer::*;
 pub use show_file::*;
 
