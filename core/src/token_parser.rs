@@ -25,6 +25,10 @@ impl Display for ParseError {
 
 impl ErrorTrait for ParseError {}
 
+fn is_byte(t: usize) -> bool {
+    t < 256
+}
+
 /// The `parse_tokens` function takes sequence of tokens and makes on them core's command.
 pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
     let Some(Token::Word(command_name)) = tokens.get(0) else { return Err(ParseError::unknown_command_template()) };
@@ -142,6 +146,29 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 file_name,
                 start: *start,
                 end: *end,
+            })
+        }
+        "buffer_write_bytes" => {
+            let Some(Token::Word(buffer_name)) = tokens.get(1) else { return Err(ParseError::unknown_command_template()) };
+            let Some(Token::UInt(start)) = tokens.get(2) else { return Err(ParseError::unknown_command_template()) };
+
+            let Some(tokens) = tokens.get(3..) else { return Err(ParseError::unknown_command_template()) };
+
+            let mut bytes: Vec<u8> = Vec::new();
+
+            for token in tokens {
+                match token {
+                    Token::UInt(byte) if is_byte(*byte) => {
+                        bytes.push(*byte as u8);
+                    }
+                    _ => return Err(ParseError::unknown_command_template()),
+                }
+            }
+
+            Ok(CoreCommand::BufferWriteBytes {
+                buffer_name,
+                start: *start,
+                bytes,
             })
         }
         _ => Err(ParseError::unknown_command_template()),

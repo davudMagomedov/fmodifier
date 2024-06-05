@@ -58,4 +58,9 @@ pub enum CoreCommand<'a> {
         start: usize,
         end: usize,
     },
+    BufferWriteBytes {
+        buffer_name: &'a str,
+        start: usize,
+        bytes: Vec<u8>,
+    },
 }

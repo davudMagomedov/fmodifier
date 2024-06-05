@@ -82,6 +82,11 @@ impl Core {
                 start,
                 end,
             } => show_file(self, file_name, start, end),
+            CoreCommand::BufferWriteBytes {
+                buffer_name,
+                start,
+                bytes,
+            } => buffer_write_bytes(self, buffer_name, start, &bytes),
         }
     }
 
