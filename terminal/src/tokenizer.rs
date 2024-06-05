@@ -75,8 +75,8 @@ fn tokenize_name(word: &str) -> Token {
 fn is_name(word: &str) -> bool {
     let mut chars = word.chars();
 
-    matches!(chars.next().unwrap(), 'A'..='Z' | 'a'..='z' | '_')
-        && chars.all(|ch| matches!(ch, 'A'..='Z' | 'a'..='z' | '_' | '0'..='9'))
+    matches!(chars.next().unwrap(), 'A'..='Z' | 'a'..='z' | '_' | '.')
+        && chars.all(|ch| matches!(ch, 'A'..='Z' | 'a'..='z' | '_' | '.' | '0'..='9'))
 }
 
 /// The `tokenize_word` function takes word and returns appropriate token. If the function couldn't
