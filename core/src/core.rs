@@ -87,6 +87,11 @@ impl Core {
                 start,
                 bytes,
             } => buffer_write_bytes(self, buffer_name, start, &bytes),
+            CoreCommand::MergeBuffers {
+                left_buffer_name,
+                right_buffer_name,
+                new_buffer_name,
+            } => merge_buffers(self, left_buffer_name, right_buffer_name, new_buffer_name),
         }
     }
 

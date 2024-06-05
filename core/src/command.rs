@@ -63,4 +63,9 @@ pub enum CoreCommand<'a> {
         start: usize,
         bytes: Vec<u8>,
     },
+    MergeBuffers {
+        left_buffer_name: &'a str,
+        right_buffer_name: &'a str,
+        new_buffer_name: String,
+    },
 }

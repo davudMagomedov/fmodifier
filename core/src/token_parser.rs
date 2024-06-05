@@ -171,6 +171,23 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 bytes,
             })
         }
+        "merge_buffers" => {
+            let Some(Token::Word(left_buffer_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::Word(right_buffer_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::Word(new_buffer_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+
+            Ok(CoreCommand::MergeBuffers {
+                left_buffer_name,
+                right_buffer_name,
+                new_buffer_name: new_buffer_name.clone(),
+            })
+        }
         _ => Err(ParseError::unknown_command_template()),
     }
 }
