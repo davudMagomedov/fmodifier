@@ -5,9 +5,15 @@ use core::output::*;
 const NEW_LINE: char = '\n';
 
 fn make_column(lines: &[String]) -> StringRectangle {
-    let content = lines.into_iter().fold(String::new(), |acc, string| {
-        format!("{acc}{NEW_LINE}{string}")
-    });
+    if lines.is_empty() {
+        return StringRectangle::new();
+    }
+
+    let content = lines[1..]
+        .into_iter()
+        .fold(lines[0].clone(), |acc, string| {
+            format!("{acc}{NEW_LINE}{string}")
+        });
 
     StringRectangle::from(content.as_str())
 }
