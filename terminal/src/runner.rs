@@ -11,7 +11,7 @@ use core::Core;
 /// 3. Execute the command.
 /// 4. Output result.
 ///
-/// It means that you can stop this runner whenever you want.
+/// Iterations ends when ends commands.
 pub struct Runner<C: Commander> {
     core: Core,
     commander: C,
@@ -35,7 +35,7 @@ impl<C: Commander> Iterator for Runner<C> {
     type Item = ();
 
     fn next(&mut self) -> Option<Self::Item> {
-        let input = self.commander.read_command();
+        let input = self.commander.read_command()?;
         let tokens = match tokenize(&input) {
             Ok(tokens) => tokens,
             Err(e) => {
