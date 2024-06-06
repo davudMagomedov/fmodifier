@@ -18,7 +18,7 @@ pub struct Runner<C: Commander> {
 }
 
 impl<C: Commander> Runner<C> {
-    fn new(commander: C) -> Self {
+    pub fn new(commander: C) -> Self {
         Runner {
             core: Core::new(),
             commander,
