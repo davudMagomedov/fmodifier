@@ -25,6 +25,7 @@ Basic description of what this change is for.
 - A little flexibility for commands. For example, `fill_buffer some_buffer 0xFF` will not raise error but behave like `fill_buffer some_buffer 0xFF 0 <buffer_size>` (fill whole buffer by the value).
 #### Fixed
 - Improved *README* file.
+- Bug with infinity loop using non-terminal *stdin stream*.
 
 ## 0.1.0
 The project just created.
