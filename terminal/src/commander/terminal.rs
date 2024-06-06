@@ -1,10 +1,16 @@
 use super::Commander;
 
-use std::io::{stderr, stdin, stdout, Result as IoResult, Stderr, Stdin, Stdout, Write};
+use std::io::{
+    stderr, stdin, stdout, IsTerminal, Result as IoResult, Stderr, Stdin, Stdout, Write,
+};
+use std::process::exit;
 
 const PROMPT: &str = "fmod> ";
 
+const EXIT_ERROR_CODE: i32 = 1;
+
 const IO_ERROR_MESSAGE: &str = "The I/O system has failed";
+const STDIN_NOT_TERMINAL_ERROR_MESSAGE: &str = "Stdin must be terminal, sir.";
 
 /// The `Terminal` structure provides function for reading and writing to terminal. It provides
 /// such basic functionality as prompt to enter and so on.
@@ -31,10 +37,29 @@ pub struct Terminal {
 impl Terminal {
     pub fn new() -> Self {
         Terminal {
-            out_stream: stdout(),
-            in_stream: stdin(),
-            error_stream: stderr(),
+            out_stream: Self::make_out_stream(),
+            in_stream: Self::make_in_stream(),
+            error_stream: Self::make_error_stream(),
         }
+    }
+
+    fn make_in_stream() -> Stdin {
+        let stdin = stdin();
+
+        if stdin.is_terminal() {
+            println!("{}", STDIN_NOT_TERMINAL_ERROR_MESSAGE);
+            exit(EXIT_ERROR_CODE);
+        }
+
+        stdin
+    }
+
+    fn make_out_stream() -> Stdout {
+        stdout()
+    }
+
+    fn make_error_stream() -> Stderr {
+        stderr()
     }
 
     /// The `read_line_raw` function returns result of getting string from terminal. The function
