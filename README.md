@@ -1,4 +1,64 @@
 **FModifier** is a file modifier that allows you to operate directly with bytes.
+## Quick Guide
+Let's run the shell with the command `fmodifier`.
+```bash
+fmodifier
+```
+Next, let's create a buffer. A buffer is simply a collection of bytes over which numerous operations can be performed.
+```fmodifier
+make_buffer some_buffer 100
+```
+In code above, we created a buffer of 100 bytes filled with zeros. Let's make sure.
+```fmodifier
+show_buffer some_buffer 0 100
+```
+This code outputs byte starting at 0 and ending at 100:
+```
+Table:
+0  ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+16 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+32 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+48 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+64 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+96 ┃ 00 00 00 00
+```
+Now let's assume that for some reason we need to set the 5th byte (*counting start from zero*) to the value 13.
+```fmodifier
+buffer_set_byte some_buffer 5 13
+```
+And now if we execute `show_buffer some_buffer 0 100`, we would get the following output.
+```
+0  ┃ 00 00 00 00 00 0d 00 00 00 00 00 00 00 00 00 00
+16 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+32 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+48 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+64 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+96 ┃ 00 00 00 00
+```
+If you didn't see the changes, look at the 5th byte, it has the value *0x0d* instead of *0x00* now.
+Now I want to fill bytes 10 to 30 with the value `0xFF`. To complete this task, run the code below.
+```fmodifier
+fill_buffer some_buffer 0xFF 10 30
+```
+This command will do exactly what we intended. Now, if you want to view the contents of the buffer, then enter the command you already know.
+```
+0  ┃ 00 00 00 00 00 0d 00 00 00 00 ff ff ff ff ff ff
+16 ┃ ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00
+32 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+48 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+64 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80 ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+96 ┃ 00 00 00 00
+```
+Now, let's turn this buffer into a file.
+<!-- TODO: Replace this code into one command turn_buffer_to_file -->
+```fmodifier
+create_file some_file 100
+from_buffer_to_file some_buffer some_file 100 0 0
+```
+I understand that it can be hard to take but the second command in code above just copies 100 bytes from the buffer to the file created in the first command starting at 0 in the buffer and at 0 in the file. Look on [commands](#commands).
 ## Example. Creating MBR partition
 Suppose we want to make an MBR partition. We have a binary file that contains the necessary code.
 ```
@@ -81,6 +141,7 @@ Yes, it may be inconvenient to do ths kind of work every time, but for a simple 
 There are two types of data in FModifier: *buffers* and *files*. Files can only be created or opened read-only, whereas buffers are not part of the file system and serve to perform all operations on them.
 When you realize that all the necessary operations on the buffer have been done, you can create a new file and write data from the buffer there.
 ## Commands
+<a id="commands"></a>
 After entering `fmodifier` in your terminal there'll be allowed following commands for you.
 1. *It's not done yet* `help [<command>]` - prints help in general or for command.
 2. `make_buffer <buffer_name> <buffer_size>` - creates a buffer named `<buffer_name>` and sized `<buffer_size>`.
