@@ -18,6 +18,13 @@ pub struct Runner<C: Commander> {
 }
 
 impl<C: Commander> Runner<C> {
+    fn new(commander: C) -> Self {
+        Runner {
+            core: Core::new(),
+            commander,
+        }
+    }
+
     fn output<T: ToOutput>(&mut self, object: T) {
         self.commander
             .write_result(format!("{}\n", object.to_output()));
