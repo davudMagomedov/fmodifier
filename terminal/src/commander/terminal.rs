@@ -46,7 +46,7 @@ impl Terminal {
     fn make_in_stream() -> Stdin {
         let stdin = stdin();
 
-        if stdin.is_terminal() {
+        if !stdin.is_terminal() {
             println!("{}", STDIN_NOT_TERMINAL_ERROR_MESSAGE);
             exit(EXIT_ERROR_CODE);
         }
