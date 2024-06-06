@@ -22,6 +22,7 @@ Basic description of what this change is for.
 - Command `help`.
 - Command `turn_buffer_to_file`. This command, surprisingly, turns the buffer into a file.
 - Command `turn_file_to_buffer`. This command, surprisingly, turns the file into a buffer. File must be opened.
+- A little flexibility for commands. For example, `fill_buffer some_buffer 0xFF` will not raise error but behave like `fill_buffer some_buffer 0xFF 0 <buffer_size>` (fill whole buffer by the value).
 #### Fixed
 - Improved *README* file.
 
