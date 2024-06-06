@@ -1,40 +1,34 @@
+use crate::commander::Commander;
 use crate::output::ToOutput;
-use crate::terminal::Terminal;
 use crate::tokenizer::tokenize;
 
 use core::parse_tokens;
 use core::Core;
 
 /// The `Runner` structure is iterator in which each iteration means following actions:
-/// 1. Take user input.
-/// 2. Parse user input.
-/// 3. Execute user input.
+/// 1. Take commander's command.
+/// 2. Parse the command.
+/// 3. Execute the command.
 /// 4. Output result.
 ///
 /// It means that you can stop this runner whenever you want.
-pub struct Runner {
+pub struct Runner<C: Commander> {
     core: Core,
-    terminal: Terminal,
+    commander: C,
 }
 
-impl Runner {
-    pub fn new() -> Self {
-        Runner {
-            core: Core::new(),
-            terminal: Terminal::new(),
-        }
-    }
-
+impl<C: Commander> Runner<C> {
     fn output<T: ToOutput>(&mut self, object: T) {
-        self.terminal.write(&format!("{}\n", object.to_output()));
+        self.commander
+            .write_result(format!("{}\n", object.to_output()));
     }
 }
 
-impl Iterator for Runner {
+impl<C: Commander> Iterator for Runner<C> {
     type Item = ();
 
     fn next(&mut self) -> Option<Self::Item> {
-        let input = self.terminal.read_line();
+        let input = self.commander.read_command();
         let tokens = match tokenize(&input) {
             Ok(tokens) => tokens,
             Err(e) => {
