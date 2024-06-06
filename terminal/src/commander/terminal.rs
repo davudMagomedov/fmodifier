@@ -91,9 +91,9 @@ impl Terminal {
 }
 
 impl Commander for Terminal {
-    fn read_command(&mut self) -> String {
+    fn read_command(&mut self) -> Option<String> {
         let io_result = self.read_line_raw();
-        self.parse_io_result(io_result)
+        Some(self.parse_io_result(io_result))
     }
 
     fn write_result(&mut self, result: String) {
