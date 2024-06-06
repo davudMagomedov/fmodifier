@@ -1,4 +1,4 @@
-// pub mod file;
+pub mod file;
 pub mod terminal;
 
 pub use terminal::Terminal;
