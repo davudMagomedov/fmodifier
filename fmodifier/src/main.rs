@@ -1,8 +1,11 @@
+use terminal::commander::Terminal;
 use terminal::runner::Runner;
 
 fn main() {
-    // let mut runner = Runner::new();
-    // loop {
-    //     runner.next();
-    // }
+    let commander = Terminal::new();
+    let mut runner = Runner::new(commander);
+
+    loop {
+        runner.next();
+    }
 }
