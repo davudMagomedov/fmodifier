@@ -31,7 +31,7 @@ fn is_byte(t: usize) -> bool {
 
 /// The `parse_tokens` function takes sequence of tokens and makes on them core's command.
 pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
-    let Some(Token::Word(command_name)) = tokens.get(0) else { return Err(ParseError::unknown_command_template()) };
+    let Some(Token::Word(command_name)) = tokens.get(0) else { return Ok(CoreCommand::Nop) };
 
     match command_name.as_str() {
         "make_buffer" => {
