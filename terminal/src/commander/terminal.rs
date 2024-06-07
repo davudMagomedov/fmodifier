@@ -4,7 +4,7 @@ use std::io::{
     stderr, stdin, stdout, IsTerminal, Lines, Result as IoResult, Stderr, StdinLock, Stdout, Write,
 };
 
-const PROMPT: &str = "fmod> ";
+const PROMPT: &str = ">>> ";
 
 const EXIT_ERROR_CODE: i32 = 1;
 
