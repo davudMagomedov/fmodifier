@@ -157,3 +157,15 @@ After entering `fmodifier` in your terminal there'll be allowed following comman
 12. `merge_buffers <left_buffer_name> <right_buffer_name> <new_buffer_name>` - creates a new buffer `<new_buffer_name>`, in which the first part of the bytes is copied from `<left_buffer_name>`, and the second part is copied from the buffer `<right_buffer_name>`. That is, the size of the new buffer is equal to the sum of the other two.
 13. `open_file <file_name>` - opens a file named `<file_name>` in the current directory *strictly for reading*.
 14. `show_file <file_name> <start> <end>` - reads a file named `<file_name>` starting with `<start>` and ending with `<end>`.
+## Build
+To build a target, run the following commands.
+### Install the Rust
+This project is written in the Rust programming language. Therefore, you should set it before building a target. [Look here](https://www.rust-lang.org/tools/install).
+### Building a target
+Next, you need to build a target. Enter the following command. It creates a basic target.
+```bash
+cargo build --release
+```
+And now you have the target in directory `./target/release/fmodifier`. That's it!
+### Features
+There's no building futures yet.
