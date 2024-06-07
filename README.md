@@ -82,24 +82,24 @@ The text above shows a part of the binary file in which the code we need is in s
 We want to copy these bytes to the beginning of a 512 byte file, and at the end of this file we need to insert bytes 0x55 and 0xAA.
 Below are the **FModifier**'s commands for creating such a file.
 ```
-fmod> make_buffer mbr 512
+>>> make_buffer mbr 512
 - Buffer with name mbr and size 512 is created.
 
-fmod> open_file main.o
+>>> open_file main.o
 - The file main.o is opened.
 
-fmod> from_file_to_buffer main.o mbr 28 0x40 0x0
+>>> from_file_to_buffer main.o mbr 28 0x40 0x0
 - Bytes of file main.o in the amount of 28 pieces were written to buffer mbr.
 
-fmod> buffer_set_byte mbr 510 0x55
+>>> buffer_set_byte mbr 510 0x55
 - Index 510 in buffer with name mbr was set to 85.
 
-fmod> buffer_set_byte mbr 511 0xAA
+>>> buffer_set_byte mbr 511 0xAA
 - Index 511 in buffer with name mbr was set to 170.
 ```
 That's it! Now let's print the result.
 ```
-fmod> show_buffer mbr 0 512
+>>> show_buffer mbr 0 512
 Table:
 
 0   ┃ 55 48 89 e5 c7 45 fc 0a 00 00 00 83 45 fc 01 b8 
