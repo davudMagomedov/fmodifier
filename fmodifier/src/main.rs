@@ -1,3 +1,5 @@
+mod clap_app;
+
 use terminal::commander::Terminal;
 use terminal::runner::Runner;
 
