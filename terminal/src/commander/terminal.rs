@@ -1,9 +1,8 @@
 use super::Commander;
 
 use std::io::{
-    stderr, stdin, stdout, IsTerminal, Result as IoResult, Stderr, Stdin, Stdout, Write,
+    stderr, stdin, stdout, IsTerminal, Lines, Result as IoResult, Stderr, StdinLock, Stdout, Write,
 };
-use std::process::exit;
 
 const PROMPT: &str = "fmod> ";
 
@@ -12,46 +11,51 @@ const EXIT_ERROR_CODE: i32 = 1;
 const IO_ERROR_MESSAGE: &str = "The I/O system has failed";
 const STDIN_NOT_TERMINAL_ERROR_MESSAGE: &str = "Stdin must be terminal, sir.";
 
+type Liner = Lines<StdinLock<'static>>;
+
 /// The `Terminal` structure provides function for reading and writing to terminal. It provides
 /// such basic functionality as prompt to enter and so on.
 ///
-/// The structure monitors I/O error and, if necessary, terminate the program.
+/// #### `Commander` implemention
+/// The `Terminal` returns `None` on `Terminal::read_command` if there's an IO error or an `stdin`
+/// stream came to EOF.
 ///
 /// #### Example
 /// ```ignore
 /// let mut terminal = Terminal::new();
 ///
-/// let line = terminal.read_line();
+/// let line = terminal.read_line().unwrap();
 ///
 /// let tokens = tokenize(line)?;
-/// let command = parse_tokens(&tokens)?;
+/// let command = parse_tokens(&tokens).unwrap();
 ///
 /// core.execute(command)?;
 /// ```
 pub struct Terminal {
+    liner: Liner,
     out_stream: Stdout,
-    in_stream: Stdin,
     error_stream: Stderr,
+
+    interacitve_mode: bool,
 }
 
 impl Terminal {
     pub fn new() -> Self {
         Terminal {
+            liner: Self::make_in_lines(),
             out_stream: Self::make_out_stream(),
-            in_stream: Self::make_in_stream(),
             error_stream: Self::make_error_stream(),
+
+            interacitve_mode: Self::is_interactive_mode(),
         }
     }
 
-    fn make_in_stream() -> Stdin {
-        let stdin = stdin();
+    fn is_interactive_mode() -> bool {
+        stdin().is_terminal()
+    }
 
-        if !stdin.is_terminal() {
-            println!("{}", STDIN_NOT_TERMINAL_ERROR_MESSAGE);
-            exit(EXIT_ERROR_CODE);
-        }
-
-        stdin
+    fn make_in_lines() -> Liner {
+        stdin().lines()
     }
 
     fn make_out_stream() -> Stdout {
@@ -62,16 +66,21 @@ impl Terminal {
         stderr()
     }
 
-    /// The `read_line_raw` function returns result of getting string from terminal. The function
-    /// can be blocked.
-    fn read_line_raw(&mut self) -> IoResult<String> {
+    fn print_prompt(&mut self) -> IoResult<()> {
         self.out_stream.write(PROMPT.as_bytes())?;
         self.out_stream.flush()?;
 
-        let mut buffer = String::new();
-        self.in_stream.read_line(&mut buffer)?;
+        Ok(())
+    }
 
-        Ok(buffer.trim().to_string())
+    /// The `read_line_raw` function returns result of getting string from terminal. The function
+    /// can be blocked.
+    fn read_line_raw(&mut self) -> Option<String> {
+        if self.interacitve_mode {
+            self.print_prompt().ok()?;
+        }
+
+        self.liner.next()?.ok()
     }
 
     /// The `write_raw` function returns result of writing string to terminal.
@@ -92,8 +101,7 @@ impl Terminal {
 
 impl Commander for Terminal {
     fn read_command(&mut self) -> Option<String> {
-        let io_result = self.read_line_raw();
-        Some(self.parse_io_result(io_result))
+        self.read_line_raw()
     }
 
     fn write_result(&mut self, result: String) {
