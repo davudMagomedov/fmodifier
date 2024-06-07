@@ -1,5 +1,6 @@
-use clap::{crate_authors, crate_name, crate_version, Arg, ArgAction, Command};
+use clap::{crate_authors, crate_name, crate_version, Arg, Command};
 
+/// The `build_app` function returns specially built `clap::Command` object.
 pub fn build_app() -> Command {
     Command::new(crate_name!())
         .version(crate_version!())
