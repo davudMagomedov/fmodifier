@@ -74,4 +74,5 @@ pub enum CoreCommand<'a> {
         start: usize,
         end: usize,
     },
+    Nop,
 }

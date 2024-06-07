@@ -98,6 +98,7 @@ impl Core {
                 start,
                 end,
             } => pull_out_slice(self, buffer_name, new_buffer_name, start, end),
+            CoreCommand::Nop => Ok(CoreOutput::new()),
         }
     }
 
