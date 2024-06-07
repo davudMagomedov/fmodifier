@@ -1,7 +1,7 @@
 use crate::app::{App, AppAction};
 
-use terminal::commander::{FileReader, Terminal};
-use terminal::runner::Runner;
+use fmodifier::terminal::commander::{FileReader, Terminal};
+use fmodifier::terminal::runner::Runner;
 
 const FILE_UNEXISTS_ERROR: &str = "A file with the name isn't found.";
 

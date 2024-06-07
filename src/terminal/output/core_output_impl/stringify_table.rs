@@ -1,6 +1,6 @@
 use super::string_rectangle::StringRectangle;
 
-use core::output::*;
+use crate::core::output::*;
 
 const NEW_LINE: char = '\n';
 

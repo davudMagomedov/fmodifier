@@ -25,7 +25,6 @@ impl Display for CoreErrorEnum {
             CoreErrorEnum::Io { e } => {
                 write!(f, "{}", e)
             }
-            _ => panic!(),
         }
     }
 }

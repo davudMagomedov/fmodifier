@@ -1,6 +1,6 @@
 use super::ToOutput;
 
-use core::output::*;
+use crate::core::output::*;
 
 mod string_rectangle;
 mod stringify_table;

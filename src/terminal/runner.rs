@@ -1,9 +1,9 @@
-use crate::commander::Commander;
-use crate::output::ToOutput;
-use crate::tokenizer::tokenize;
+use super::commander::Commander;
+use super::output::ToOutput;
+use super::tokenizer::tokenize;
 
-use core::parse_tokens;
-use core::Core;
+use crate::core::parse_tokens;
+use crate::core::Core;
 
 /// The `Runner` structure is iterator in which each iteration means following actions:
 /// 1. Take commander's command.

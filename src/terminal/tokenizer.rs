@@ -1,4 +1,4 @@
-use core::token::Token;
+use crate::core::token::Token;
 
 pub mod error {
     use std::error::Error as ErrorTrait;
