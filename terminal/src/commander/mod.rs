@@ -1,6 +1,7 @@
 pub mod file;
 pub mod terminal;
 
+pub use file::FileReader;
 pub use terminal::Terminal;
 
 /// The `Commander` trait issues commands an accepts results. What to do with the results and how
