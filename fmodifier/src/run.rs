@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::app::{App, AppAction};
 
 use terminal::commander::{FileReader, Terminal};
