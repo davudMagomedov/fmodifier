@@ -27,7 +27,7 @@ impl<C: Commander> Runner<C> {
 
     fn output<T: ToOutput>(&mut self, object: T) {
         self.commander
-            .write_result(format!("{}\n", object.to_output()));
+            .write_result(format!("{}", object.to_output()));
     }
 }
 
