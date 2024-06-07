@@ -1,3 +1,4 @@
+mod app;
 mod clap_app;
 
 use terminal::commander::Terminal;
