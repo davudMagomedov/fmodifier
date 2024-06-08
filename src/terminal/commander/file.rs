@@ -81,7 +81,7 @@ impl FileReader {
 }
 
 impl Commander for FileReader {
-    fn is_terminal(&self) -> bool {
+    fn is_terminal() -> bool {
         false
     }
 

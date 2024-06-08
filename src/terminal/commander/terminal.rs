@@ -100,7 +100,7 @@ impl Terminal {
 }
 
 impl Commander for Terminal {
-    fn is_terminal(&self) -> bool {
+    fn is_terminal() -> bool {
         true
     }
 
