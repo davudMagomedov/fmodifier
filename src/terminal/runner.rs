@@ -1,5 +1,7 @@
 use super::commander::Commander;
+use super::exec_rcommand::execute_run_command;
 use super::output::ToOutput;
+use super::rcommand::parse_run_command;
 use super::tokenizer::tokenize;
 
 use crate::core::parse_tokens;
@@ -46,6 +48,7 @@ impl<C: Commander> Iterator for Runner<C> {
         }
 
         let input = self.commander.read_command()?;
+
         let tokens = match tokenize(&input) {
             Ok(tokens) => tokens,
             Err(e) => {
@@ -53,6 +56,17 @@ impl<C: Commander> Iterator for Runner<C> {
                 return Some(());
             }
         };
+
+        if let Some(run_command) = parse_run_command(&tokens) {
+            let execute_result = execute_run_command(self, &run_command);
+            match execute_result {
+                Ok(rc_output) => self.output(rc_output),
+                Err(e) => self.output(e),
+            };
+
+            return Some(());
+        }
+
         let command = match parse_tokens(&tokens) {
             Ok(command) => command,
             Err(e) => {
