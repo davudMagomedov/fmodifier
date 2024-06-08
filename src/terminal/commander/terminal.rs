@@ -100,6 +100,10 @@ impl Terminal {
 }
 
 impl Commander for Terminal {
+    fn is_terminal(&self) -> bool {
+        true
+    }
+
     fn read_command(&mut self) -> Option<String> {
         self.read_line_raw()
     }

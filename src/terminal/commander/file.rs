@@ -81,6 +81,10 @@ impl FileReader {
 }
 
 impl Commander for FileReader {
+    fn is_terminal(&self) -> bool {
+        false
+    }
+
     fn read_command(&mut self) -> Option<String> {
         self.liner.next()
     }
