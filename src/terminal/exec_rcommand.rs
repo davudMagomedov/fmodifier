@@ -42,7 +42,7 @@ impl ToOutput for RCOutput {
 /// executed, the function returns `Ok(obj)` where `obj`'s type implements `ToOtput` trait.
 /// Otherwise, the function returns error that implements `ToOutput` trait.
 pub fn execute_run_command<'a, C: Commander>(
-    runner: &'a mut Runner<C>,
+    runner: &mut Runner<C>,
     rcommand: &'a RunCommand,
 ) -> Result<RCOutput, ExecuteRunCommandError<'a>> {
     match rcommand {
