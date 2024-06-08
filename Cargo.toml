@@ -11,3 +11,4 @@ path = "src/bin/fmodifier/main.rs"
 
 [dependencies]
 clap = { version = "4.5.6", features = ["cargo"] }
+colored = { version = "2.1.0" }
