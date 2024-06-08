@@ -33,7 +33,11 @@ impl<C: Commander> Runner<C> {
         self.completed = true;
     }
 
-    fn output<T: ToOutput>(&mut self, object: T) {
+    pub fn print(&mut self, msg: String) {
+        self.commander.write_result(msg);
+    }
+
+    pub fn output<T: ToOutput>(&mut self, object: T) {
         self.commander
             .write_result(format!("{}", object.to_output()));
     }
@@ -59,11 +63,6 @@ impl<C: Commander> Iterator for Runner<C> {
 
         if let Some(run_command) = parse_run_command(&tokens) {
             let execute_result = execute_run_command(self, &run_command);
-            match execute_result {
-                Ok(rc_output) => self.output(rc_output),
-                Err(e) => self.output(e),
-            };
-
             return Some(());
         }
 
