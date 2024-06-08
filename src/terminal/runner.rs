@@ -15,6 +15,7 @@ use crate::core::Core;
 pub struct Runner<C: Commander> {
     core: Core,
     commander: C,
+    completed: bool,
 }
 
 impl<C: Commander> Runner<C> {
@@ -22,6 +23,7 @@ impl<C: Commander> Runner<C> {
         Runner {
             core: Core::new(),
             commander,
+            completed: false,
         }
     }
 
@@ -35,6 +37,10 @@ impl<C: Commander> Iterator for Runner<C> {
     type Item = ();
 
     fn next(&mut self) -> Option<Self::Item> {
+        if self.completed {
+            return None;
+        }
+
         let input = self.commander.read_command()?;
         let tokens = match tokenize(&input) {
             Ok(tokens) => tokens,
