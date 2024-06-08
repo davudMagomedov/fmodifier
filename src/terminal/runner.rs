@@ -27,6 +27,10 @@ impl<C: Commander> Runner<C> {
         }
     }
 
+    pub fn finish(&mut self) {
+        self.completed = true;
+    }
+
     fn output<T: ToOutput>(&mut self, object: T) {
         self.commander
             .write_result(format!("{}", object.to_output()));
