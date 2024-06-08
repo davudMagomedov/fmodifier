@@ -1,7 +1,11 @@
+mod help;
+
 use crate::terminal::commander::Commander;
 use crate::terminal::output::ToOutput;
 use crate::terminal::rcommand::RunCommand;
 use crate::terminal::runner::Runner;
+
+use help::help;
 
 use std::error::Error as ErrorTrait;
 use std::fmt::{Display, Result as FmtResult};
@@ -44,17 +48,18 @@ impl ToOutput for RCOutput {
 pub fn execute_run_command<'a, C: Commander>(
     runner: &mut Runner<C>,
     rcommand: &'a RunCommand,
-) -> Result<RCOutput, ExecuteRunCommandError<'a>> {
+) -> Result<(), ExecuteRunCommandError<'a>> {
     match rcommand {
         RunCommand::Exit => {
             runner.finish();
-            Ok(RCOutput("".to_string()))
         }
         RunCommand::Help => {
-            unimplemented!();
+            help(runner);
         }
         RunCommand::HelpAbout { .. } => {
             unimplemented!();
         }
     }
+
+    Ok(())
 }
