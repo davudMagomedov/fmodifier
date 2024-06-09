@@ -62,7 +62,10 @@ impl<C: Commander> Iterator for Runner<C> {
         };
 
         if let Some(run_command) = parse_run_command(&tokens) {
-            let execute_result = execute_run_command(self, &run_command);
+            if let Err(e) = execute_run_command(self, &run_command) {
+                self.output(e);
+            };
+
             return Some(());
         }
 
