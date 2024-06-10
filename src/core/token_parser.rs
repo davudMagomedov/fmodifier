@@ -213,7 +213,7 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
             let Some(Token::Word(buffer_name)) = tokens.get(1) else {
                 return Err(ParseError::unknown_command_template())
             };
-            let Some(Token::Word(file_name)) = tokens.get(1) else {
+            let Some(Token::Word(file_name)) = tokens.get(2) else {
                 return Err(ParseError::unknown_command_template())
             };
 
