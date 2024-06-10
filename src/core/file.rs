@@ -38,8 +38,10 @@ pub struct NewFile {
 }
 
 impl NewFile {
-    /// The `new` function creates new file in directory and opens it in read-write mode. If the
-    /// file already exists, the function returns `Err`.
+    /// The `new` function creates new file in directory and opens in in read-write mode. File will
+    /// have bytes in the amount of given pieces filled by zero.
+    ///
+    /// If file with the given path already exists, the function returns `Err`.
     pub fn new<T: AsRef<Path>>(path: T, size: usize) -> IoResult<Self> {
         let mut raw_file = OpenOptions::new()
             .write(true)
