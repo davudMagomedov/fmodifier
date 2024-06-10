@@ -74,5 +74,9 @@ pub enum CoreCommand<'a> {
         start: usize,
         end: usize,
     },
+    TurnBufferToFile {
+        buffer_name: &'a str,
+        file_name: String,
+    },
     Nop,
 }

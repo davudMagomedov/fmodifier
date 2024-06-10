@@ -18,6 +18,7 @@ mod open_file;
 mod pull_out_slice;
 mod show_buffer;
 mod show_file;
+mod turn_buffer_to_file;
 
 pub use buffer_info::*;
 pub use buffer_set_byte::*;
@@ -32,6 +33,7 @@ pub use open_file::*;
 pub use pull_out_slice::*;
 pub use show_buffer::*;
 pub use show_file::*;
+pub use turn_buffer_to_file::turn_buffer_to_file;
 
 // Inner ones
 
