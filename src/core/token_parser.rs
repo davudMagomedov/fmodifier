@@ -219,7 +219,7 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
 
             Ok(CoreCommand::TurnBufferToFile {
                 buffer_name,
-                file_name: file_name.clone(),
+                new_file_name: file_name.clone(),
             })
         }
         "turn_file_to_buffer" => {

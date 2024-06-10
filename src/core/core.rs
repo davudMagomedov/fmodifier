@@ -100,8 +100,8 @@ impl Core {
             } => pull_out_slice(self, buffer_name, new_buffer_name, start, end),
             CoreCommand::TurnBufferToFile {
                 buffer_name,
-                file_name,
-            } => turn_buffer_to_file(self, buffer_name, file_name),
+                new_file_name,
+            } => turn_buffer_to_file(self, buffer_name, new_file_name),
             CoreCommand::TurnFileToBuffer {
                 file_name,
                 new_buffer_name,
