@@ -1,5 +1,3 @@
-use std::io::Read;
-
 use super::*;
 
 fn info(left_buffer_name: &str, right_buffer_name: &str, new_buffer_name: &str) -> String {
