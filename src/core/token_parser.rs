@@ -222,6 +222,19 @@ pub fn parse_tokens(tokens: &[Token]) -> ParseResult<CoreCommand> {
                 file_name: file_name.clone(),
             })
         }
+        "turn_file_to_buffer" => {
+            let Some(Token::Word(file_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+            let Some(Token::Word(new_buffer_name)) = tokens.get(2) else {
+                return Err(ParseError::unknown_command_template())
+            };
+
+            Ok(CoreCommand::TurnFileToBuffer {
+                file_name,
+                new_buffer_name: new_buffer_name.clone(),
+            })
+        }
         _ => Err(ParseError::unknown_command_template()),
     }
 }

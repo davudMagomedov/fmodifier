@@ -102,6 +102,10 @@ impl Core {
                 buffer_name,
                 file_name,
             } => turn_buffer_to_file(self, buffer_name, file_name),
+            CoreCommand::TurnFileToBuffer {
+                file_name,
+                new_buffer_name,
+            } => turn_file_to_buffer(self, file_name, new_buffer_name),
             CoreCommand::Nop => Ok(CoreOutput::new()),
         }
     }

@@ -78,5 +78,9 @@ pub enum CoreCommand<'a> {
         buffer_name: &'a str,
         file_name: String,
     },
+    TurnFileToBuffer {
+        file_name: &'a str,
+        new_buffer_name: String,
+    },
     Nop,
 }
