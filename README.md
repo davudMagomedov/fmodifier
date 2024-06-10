@@ -53,10 +53,8 @@ This command will do exactly what we intended. Now, if you want to view the cont
 96 ┃ 00 00 00 00
 ```
 Now, let's turn this buffer into a file.
-<!-- TODO: Replace this code into one command turn_buffer_to_file -->
 ```fmodifier
-create_file some_file 100
-from_buffer_to_file some_buffer some_file 100 0 0
+turn_buffer_to_file some_buffer some_file
 ```
 I understand that it can be hard to take but the second command in code above just copies 100 bytes from the buffer to the file created in the first command starting at 0 in the buffer and at 0 in the file. Look on [commands](#commands).
 ## Example. Creating MBR partition
