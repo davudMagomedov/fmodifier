@@ -14,7 +14,7 @@ fn create_file_info(file_name: &str, file_size: usize) -> String {
 /// Output's format:
 /// - Info: File with name <file_name> and size <file_size> was created.
 pub fn create_file(core: &mut Core, file_name: String, file_size: usize) -> CoreResult<CoreOutput> {
-    let file = File::New(NewFile::new(&file_name).map_err(|e| CoreError::from(e))?);
+    let file = File::New(NewFile::new(&file_name, file_size).map_err(|e| CoreError::from(e))?);
 
     core.variables.new_file(file_name.clone(), file);
 

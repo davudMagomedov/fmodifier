@@ -40,14 +40,16 @@ pub struct NewFile {
 impl NewFile {
     /// The `new` function creates new file in directory and opens it in read-write mode. If the
     /// file already exists, the function returns `Err`.
-    pub fn new<T: AsRef<Path>>(path: T) -> IoResult<Self> {
-        Ok(NewFile {
-            raw: OpenOptions::new()
-                .write(true)
-                .read(true)
-                .create_new(true)
-                .open(path)?,
-        })
+    pub fn new<T: AsRef<Path>>(path: T, size: usize) -> IoResult<Self> {
+        let mut raw_file = OpenOptions::new()
+            .write(true)
+            .read(true)
+            .create_new(true)
+            .open(path)?;
+
+        raw_file.write_all(&vec![0; size])?;
+
+        Ok(NewFile { raw: raw_file })
     }
 
     /// The `len` function returns length of the file.
