@@ -82,16 +82,12 @@ Below are the **FModifier**'s commands for creating such a file.
 ```
 >>> make_buffer mbr 512
 - Buffer with name mbr and size 512 is created.
-
 >>> open_file main.o
 - The file main.o is opened.
-
 >>> from_file_to_buffer main.o mbr 28 0x40 0x0
 - Bytes of file main.o in the amount of 28 pieces were written to buffer mbr.
-
 >>> buffer_set_byte mbr 510 0x55
 - Index 510 in buffer with name mbr was set to 85.
-
 >>> buffer_set_byte mbr 511 0xAA
 - Index 511 in buffer with name mbr was set to 170.
 ```
@@ -99,7 +95,6 @@ That's it! Now let's print the result.
 ```
 >>> show_buffer mbr 0 512
 Table:
-
 0   ┃ 55 48 89 e5 c7 45 fc 0a 00 00 00 83 45 fc 01 b8 
 16  ┃ 00 80 00 00 8b 55 fc 66 89 10 eb ef 00 00 00 00 
 32  ┃ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
