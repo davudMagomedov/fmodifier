@@ -13,6 +13,11 @@ Basic description of what this change is for.
 ### Changed
 - Items
 ```
+## 0.3.0 - Unreleased
+### Added
+- Variables for better file execution.
+- Command `help <command>`
+
 ## 0.2.0 - 11.06.2024
 ### Added
 - Simple CLI.
