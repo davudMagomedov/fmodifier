@@ -6,6 +6,8 @@ use std::collections::HashMap;
 enum VariableValue {
     File(File),
     Buffer(Buffer),
+    Integer(usize),
+    String(String),
 }
 
 /// The `Variables` structure stores buffer and files.
@@ -33,30 +35,44 @@ impl Variables {
 
     pub fn get_buffer(&self, buffer_name: &str) -> Option<&Buffer> {
         self.vars.get(buffer_name).map(|var| match var {
-            VariableValue::File(_) => None,
             VariableValue::Buffer(b) => Some(b),
+            _ => None,
         })?
     }
 
     pub fn get_buffer_mut(&mut self, buffer_name: &str) -> Option<&mut Buffer> {
         self.vars.get_mut(buffer_name).map(|var| match var {
-            VariableValue::File(_) => None,
             VariableValue::Buffer(b) => Some(b),
+            _ => None,
         })?
     }
 
     pub fn get_file(&self, file_name: &str) -> Option<&File> {
         self.vars.get(file_name).map(|var| match var {
             VariableValue::File(f) => Some(f),
-            VariableValue::Buffer(_) => None,
+            _ => None,
         })?
     }
 
     pub fn get_file_mut(&mut self, file_name: &str) -> Option<&mut File> {
         self.vars.get_mut(file_name).map(|var| match var {
             VariableValue::File(f) => Some(f),
-            VariableValue::Buffer(_) => None,
+            _ => None,
         })?
+    }
+
+    pub fn get_integer(&mut self, var_name: &str) -> Option<usize> {
+        match self.vars.get(var_name)? {
+            VariableValue::Integer(integer) => Some(*integer),
+            _ => None,
+        }
+    }
+
+    pub fn get_string(&mut self, var_name: &str) -> Option<&String> {
+        match self.vars.get(var_name)? {
+            VariableValue::String(string) => Some(string),
+            _ => None,
+        }
     }
 
     /// The `new_buffer` function replaces value in `buffer_name` to given buffer. Old value
