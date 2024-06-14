@@ -3,6 +3,7 @@ pub mod core;
 pub mod core_e;
 pub mod operand;
 pub mod output;
+pub mod parse_operands;
 pub mod token;
 pub mod token_parser;
 pub mod tokens_to_operands;
