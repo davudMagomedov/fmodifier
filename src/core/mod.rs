@@ -16,5 +16,7 @@ mod variables;
 pub use command::*;
 pub use core::*;
 pub use core_e::*;
+pub use parse_operands::parse_operands;
 pub use token::*;
 pub use token_parser::*;
+pub use tokens_to_operands::*;
