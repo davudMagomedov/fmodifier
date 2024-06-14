@@ -79,6 +79,50 @@ fn is_name(word: &str) -> bool {
         && chars.all(|ch| matches!(ch, 'A'..='Z' | 'a'..='z' | '_' | '.' | '0'..='9'))
 }
 
+/// The `tokenize_variable` function returns `Token::Variable` taking a word.
+///
+/// Accepted guarantees:
+/// - `is_variable(word)`.
+/// - `!word.is_empty()`.
+fn tokenize_variable(word: &str) -> Token {
+    debug_assert!(is_variable(word));
+    debug_assert!(!word.is_empty());
+
+    let mut chars = word.chars();
+
+    match chars.next() {
+        Some(var_name_ch @ ('A'..='Z' | 'a'..='z' | '_' | '.')) => {
+            Token::variable(var_name_ch.to_string())
+        }
+        Some('(') => {
+            let var_name: String = chars.take_while(|ch| *ch != ')').collect();
+            Token::variable(var_name)
+        }
+        _ => unreachable!(),
+    }
+}
+
+fn is_variable(word: &str) -> bool {
+    let mut chars = word.chars();
+
+    if chars.next().unwrap() != '$' {
+        return false;
+    }
+
+    match chars.next() {
+        Some('A'..='Z' | 'a'..='z' | '_' | '.') => true,
+        Some('(') => {
+            let variable_name: String = chars.take_while(|ch| *ch != ')').collect();
+            if variable_name.is_empty() {
+                return false;
+            }
+
+            is_name(&variable_name)
+        }
+        _ => false,
+    }
+}
+
 /// The `tokenize_word` function takes word and returns appropriate token. If the function couldn't
 /// tokenize the word, the function returns Err.
 fn tokenize_word(word: &str) -> Result<Token, TokenizeError> {
@@ -91,6 +135,8 @@ fn tokenize_word(word: &str) -> Result<Token, TokenizeError> {
         Ok(tokenize_integer(word))
     } else if is_name(word) {
         Ok(tokenize_name(word))
+    } else if is_variable(word) {
+        Ok(tokenize_variable(word))
     } else {
         Err(TokenizeError::couldnot_tokenize_word(word))
     }
