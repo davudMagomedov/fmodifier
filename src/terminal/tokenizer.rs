@@ -90,6 +90,8 @@ fn tokenize_variable(word: &str) -> Token {
 
     let mut chars = word.chars();
 
+    let _ = chars.next().unwrap();
+
     match chars.next() {
         Some(var_name_ch @ ('A'..='Z' | 'a'..='z' | '_' | '.')) => {
             Token::variable(var_name_ch.to_string())
