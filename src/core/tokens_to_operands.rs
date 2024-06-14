@@ -29,11 +29,22 @@ pub fn tokens_to_operands(
     core: &mut Core,
     tokens: &[Token],
 ) -> Result<Vec<Operand>, TokensTranslationError> {
-    Ok(tokens
+    tokens
         .into_iter()
         .map(|token| match token {
-            Token::UInt(integer) => Operand::UInt(*integer),
-            Token::Word(word) => Operand::Name(word.clone()),
+            Token::UInt(integer) => Ok(Operand::UInt(*integer)),
+            Token::Word(word) => Ok(Operand::Name(word.clone())),
+            Token::Variable(var_name) => {
+                if let Some(integer) = core.variables.get_integer(var_name) {
+                    Ok(Operand::UInt(integer))
+                } else if let Some(string) = core.variables.get_string(var_name) {
+                    Ok(Operand::Name(string.clone()))
+                } else {
+                    Err(TokensTranslationError::UnknownVariable {
+                        varname: var_name.clone(),
+                    })
+                }
+            }
         })
-        .collect())
+        .collect()
 }
