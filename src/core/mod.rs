@@ -5,6 +5,7 @@ pub mod operand;
 pub mod output;
 pub mod token;
 pub mod token_parser;
+pub mod tokens_to_operands;
 
 mod buffer;
 mod commands;
