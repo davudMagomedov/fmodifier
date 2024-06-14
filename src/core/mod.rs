@@ -5,7 +5,6 @@ pub mod operand;
 pub mod output;
 pub mod parse_operands;
 pub mod token;
-pub mod token_parser;
 pub mod tokens_to_operands;
 
 mod buffer;
@@ -18,5 +17,4 @@ pub use core::*;
 pub use core_e::*;
 pub use parse_operands::parse_operands;
 pub use token::*;
-pub use token_parser::*;
 pub use tokens_to_operands::*;
