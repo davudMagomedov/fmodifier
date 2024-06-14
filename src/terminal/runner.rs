@@ -4,8 +4,10 @@ use super::output::ToOutput;
 use super::rcommand::parse_run_command;
 use super::tokenizer::tokenize;
 
-use crate::core::parse_tokens;
+use crate::core::parse_operands;
+use crate::core::tokens_to_operands;
 use crate::core::Core;
+use crate::core::Token;
 
 /// The `Runner` structure is iterator in which each iteration means following actions:
 /// 1. Take commander's command.
@@ -61,7 +63,15 @@ impl<C: Commander> Iterator for Runner<C> {
             }
         };
 
-        if let Some(run_command) = parse_run_command(&tokens) {
+        let operands = match tokens_to_operands(&mut self.core, &tokens) {
+            Ok(operands) => operands,
+            Err(e) => {
+                self.output(e);
+                return Some(());
+            }
+        };
+
+        if let Some(run_command) = parse_run_command(&operands) {
             if let Err(e) = execute_run_command(self, &run_command) {
                 self.output(e);
             };
@@ -69,13 +79,14 @@ impl<C: Commander> Iterator for Runner<C> {
             return Some(());
         }
 
-        let command = match parse_tokens(&tokens) {
+        let command = match parse_operands(&operands) {
             Ok(command) => command,
             Err(e) => {
                 self.output(e);
                 return Some(());
             }
         };
+
         let core_output = match self.core.execute(command) {
             Ok(core_output) => core_output,
             Err(e) => {
