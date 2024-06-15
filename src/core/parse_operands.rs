@@ -252,6 +252,13 @@ pub fn parse_operands(tokens: &[Operand]) -> ParseResult<CoreCommand> {
                 _ => return Err(ParseError::unknown_command_template()),
             }
         }
+        "get_variable" => {
+            let Some(Operand::Name(variable_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+
+            Ok(CoreCommand::GetVariable { variable_name })
+        }
         _ => Err(ParseError::unknown_command_template()),
     }
 }

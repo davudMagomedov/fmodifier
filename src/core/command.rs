@@ -90,5 +90,8 @@ pub enum CoreCommand<'a> {
         variable_name: String,
         value: String,
     },
+    GetVariable {
+        variable_name: &'a str,
+    },
     Nop,
 }
