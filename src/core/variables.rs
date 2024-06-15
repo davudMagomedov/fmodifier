@@ -85,4 +85,18 @@ impl Variables {
     pub fn new_file(&mut self, file_name: String, file: File) {
         self.vars.insert(file_name, VariableValue::File(file));
     }
+
+    /// The `new_integer` function replaces value in `variable_name` to given integer. Old value
+    /// will be deleted.
+    pub fn new_integer(&mut self, variable_name: String, value: usize) {
+        self.vars
+            .insert(variable_name, VariableValue::Integer(value));
+    }
+
+    // The `new_string` function replaces value in `variable_name` by given string. Old value will
+    // be deleted.
+    pub fn new_string(&mut self, variable_name: String, value: String) {
+        self.vars
+            .insert(variable_name, VariableValue::String(value));
+    }
 }
