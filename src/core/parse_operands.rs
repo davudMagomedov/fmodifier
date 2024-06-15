@@ -235,6 +235,23 @@ pub fn parse_operands(tokens: &[Operand]) -> ParseResult<CoreCommand> {
                 new_buffer_name: new_buffer_name.clone(),
             })
         }
+        "set_variable" => {
+            let Some(Operand::Name(variable_name)) = tokens.get(1) else {
+                return Err(ParseError::unknown_command_template())
+            };
+
+            match tokens.get(2) {
+                Some(Operand::Name(value_string)) => Ok(CoreCommand::SetVariableString {
+                    variable_name: variable_name.clone(),
+                    value: value_string.clone(),
+                }),
+                Some(Operand::UInt(value_integer)) => Ok(CoreCommand::SetVariableInteger {
+                    variable_name: variable_name.clone(),
+                    value: *value_integer,
+                }),
+                _ => return Err(ParseError::unknown_command_template()),
+            }
+        }
         _ => Err(ParseError::unknown_command_template()),
     }
 }

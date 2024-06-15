@@ -82,5 +82,13 @@ pub enum CoreCommand<'a> {
         file_name: &'a str,
         new_buffer_name: String,
     },
+    SetVariableInteger {
+        variable_name: String,
+        value: usize,
+    },
+    SetVariableString {
+        variable_name: String,
+        value: String,
+    },
     Nop,
 }

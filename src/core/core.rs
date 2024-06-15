@@ -106,6 +106,14 @@ impl Core {
                 file_name,
                 new_buffer_name,
             } => turn_file_to_buffer(self, file_name, new_buffer_name),
+            CoreCommand::SetVariableInteger {
+                variable_name,
+                value,
+            } => set_variable_integer(self, variable_name, value),
+            CoreCommand::SetVariableString {
+                variable_name,
+                value,
+            } => set_variable_string(self, variable_name, value),
             CoreCommand::Nop => Ok(CoreOutput::new()),
         }
     }
