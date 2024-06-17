@@ -17,7 +17,8 @@ Basic description of what this change is for.
 ## 0.3.0 - Unreleased
 ### Added
 - Variables for better file execution.
-- Command `help <command>`
+- Running the program with the set values of the variables.
+- Command `help <command>`.
 
 ## 0.2.0 - 11.06.2024
 ### Added
