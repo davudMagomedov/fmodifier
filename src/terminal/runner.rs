@@ -4,9 +4,12 @@ use super::output::ToOutput;
 use super::rcommand::parse_run_command;
 use super::tokenizer::tokenize;
 
+use crate::core::output::CoreOutput;
 use crate::core::parse_operands;
 use crate::core::tokens_to_operands;
 use crate::core::Core;
+use crate::core::CoreCommand;
+use crate::core::CoreResult;
 use crate::core::Token;
 
 /// The `Runner` structure is iterator in which each iteration means following actions:
@@ -42,6 +45,10 @@ impl<C: Commander> Runner<C> {
     pub fn output<T: ToOutput>(&mut self, object: T) {
         self.commander
             .write_result(format!("{}", object.to_output()));
+    }
+
+    pub fn execute(&mut self, core_command: CoreCommand) -> CoreResult<CoreOutput> {
+        self.core.execute(core_command)
     }
 }
 
@@ -87,7 +94,7 @@ impl<C: Commander> Iterator for Runner<C> {
             }
         };
 
-        let core_output = match self.core.execute(command) {
+        let core_output = match self.execute(command) {
             Ok(core_output) => core_output,
             Err(e) => {
                 self.output(e);
