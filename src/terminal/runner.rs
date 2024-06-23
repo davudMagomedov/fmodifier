@@ -10,7 +10,14 @@ use crate::core::tokens_to_operands;
 use crate::core::Core;
 use crate::core::CoreCommand;
 use crate::core::CoreResult;
-use crate::core::Token;
+
+const REGULAR_COMMENT_START: &str = "//";
+
+/// The `clear_comments` function clears all comments in given string.
+fn clear_comments(string: &str) -> String {
+    let Some(comment_start_index) = string.find(REGULAR_COMMENT_START) else { return string.to_string() };
+    string[..comment_start_index].to_string()
+}
 
 /// The `Runner` structure is iterator in which each iteration means following actions:
 /// 1. Take commander's command.
@@ -60,7 +67,7 @@ impl<C: Commander> Iterator for Runner<C> {
             return None;
         }
 
-        let input = self.commander.read_command()?;
+        let input = clear_comments(&self.commander.read_command()?);
 
         let tokens = match tokenize(&input) {
             Ok(tokens) => tokens,
