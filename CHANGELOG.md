@@ -24,6 +24,7 @@ Basic description of what this change is for.
 - Command `files_list`.
 - Command `opened_files_list`.
 - Command `created_files_list`.
+- Command `print`.
 
 ## 0.2.0 - 11.06.2024
 ### Added
