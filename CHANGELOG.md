@@ -4,7 +4,7 @@ The log template is shown below.
 ```
 ## VERSION - YYYY-MM-DD
 Basic description of what this change is for.
-#### Added
+### Added
 - Items
 ### Removed
 - Items
@@ -19,6 +19,11 @@ Basic description of what this change is for.
 - Variables for better file execution.
 - Running the program with the set values of the variables.
 - Command `help <command>`.
+- Command `variables_list`.
+- Command `buffers_list`.
+- Command `files_list`.
+- Command `opened_files_list`.
+- Command `created_files_list`.
 
 ## 0.2.0 - 11.06.2024
 ### Added
