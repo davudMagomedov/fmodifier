@@ -6,20 +6,12 @@ use std::io::{
 
 const PROMPT: &str = ">>> ";
 
-// const REGULAR_COMMENT_START: &str = "//";
-
 const EXIT_ERROR_CODE: i32 = 1;
 
 const IO_ERROR_MESSAGE: &str = "The I/O system has failed";
 const STDIN_NOT_TERMINAL_ERROR_MESSAGE: &str = "Stdin must be terminal, sir.";
 
 type Liner = Lines<StdinLock<'static>>;
-
-// /// The `clear_comments` function clears all comments in given string.
-// fn clear_comments(string: &str) -> String {
-//     let Some(comment_start_index) = string.find("//") else { return string.to_string() };
-//     string[..comment_start_index].to_string()
-// }
 
 /// The `Terminal` structure provides function for reading and writing to terminal. It provides
 /// such basic functionality as prompt to enter and so on.
