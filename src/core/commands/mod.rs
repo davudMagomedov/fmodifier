@@ -22,6 +22,7 @@ mod show_buffer;
 mod show_file;
 mod turn_buffer_to_file;
 mod turn_file_to_buffer;
+mod variables_list;
 
 pub use buffer_info::*;
 pub use buffer_set_byte::*;
@@ -40,6 +41,7 @@ pub use show_buffer::*;
 pub use show_file::*;
 pub use turn_buffer_to_file::*;
 pub use turn_file_to_buffer::*;
+pub use variables_list::*;
 
 // Inner ones
 

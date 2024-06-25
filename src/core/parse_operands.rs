@@ -259,6 +259,7 @@ pub fn parse_operands(tokens: &[Operand]) -> ParseResult<CoreCommand> {
 
             Ok(CoreCommand::GetVariable { variable_name })
         }
+        "variables_list" => Ok(CoreCommand::VariablesList),
         _ => Err(ParseError::unknown_command_template()),
     }
 }

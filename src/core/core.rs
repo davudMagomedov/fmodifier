@@ -115,6 +115,7 @@ impl Core {
                 value,
             } => set_variable_string(self, variable_name, value),
             CoreCommand::GetVariable { variable_name } => get_variable(self, variable_name),
+            CoreCommand::VariablesList => variables_list(self),
             CoreCommand::Nop => Ok(CoreOutput::new()),
         }
     }
