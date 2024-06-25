@@ -1,9 +1,10 @@
 use super::buffer::Buffer;
 use super::file::File;
 
+use std::collections::hash_map::Iter as PairIter;
 use std::collections::HashMap;
 
-enum VariableValue {
+pub enum VariableValue {
     File(File),
     Buffer(Buffer),
     Integer(usize),
@@ -31,6 +32,10 @@ impl Variables {
         Variables {
             vars: HashMap::new(),
         }
+    }
+
+    pub fn all(&self) -> PairIter<String, VariableValue> {
+        self.vars.iter()
     }
 
     pub fn get_buffer(&self, buffer_name: &str) -> Option<&Buffer> {
